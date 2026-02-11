@@ -1,0 +1,2210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>VoucherPalace Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Mobile-first custom styles */
+    @media (max-width: 640px) {
+      .table-card {
+        display: block;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+        padding: 1rem;
+        background: white;
+      }
+    }
+    
+    .modal-backdrop {
+      backdrop-filter: blur(4px);
+    }
+    
+    .touch-optimized {
+      min-height: 44px;
+      padding: 12px 16px;
+    }
+    
+    @keyframes slideIn {
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    
+    .action-card {
+      animation: slideIn 0.3s ease-out;
+    }
+    
+    /* Smooth transitions */
+    .tab-content {
+      transition: opacity 0.2s ease;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen font-sans antialiased">
+
+  <!-- Mobile Navigation Bottom Bar -->
+  <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40 md:hidden flex justify-around items-center py-2 px-4 shadow-lg">
+    <button onclick="switchTab('dashboard')" class="flex flex-col items-center p-2 text-blue-600 nav-btn" data-tab="dashboard">
+      <i class="fas fa-tachometer-alt text-xl"></i>
+      <span class="text-xs mt-1">Dashboard</span>
+    </button>
+    <button onclick="switchTab('vouchers')" class="flex flex-col items-center p-2 text-gray-600 nav-btn" data-tab="vouchers">
+      <i class="fas fa-ticket-alt text-xl"></i>
+      <span class="text-xs mt-1">Vouchers</span>
+    </button>
+    <button onclick="switchTab('users')" class="flex flex-col items-center p-2 text-gray-600 nav-btn" data-tab="users">
+      <i class="fas fa-users text-xl"></i>
+      <span class="text-xs mt-1">Users</span>
+    </button>
+    <button onclick="switchTab('merchants')" class="flex flex-col items-center p-2 text-gray-600 nav-btn" data-tab="merchants">
+      <i class="fas fa-store text-xl"></i>
+      <span class="text-xs mt-1">Merchants</span>
+    </button>
+    <button onclick="switchTab('companies')" class="flex flex-col items-center p-2 text-gray-600 nav-btn" data-tab="companies">
+      <i class="fas fa-building text-xl"></i>
+      <span class="text-xs mt-1">Companies</span>
+    </button>
+  </div>
+
+  <!-- Main Container -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 md:pb-8">
+    
+    <!-- Header -->
+    <header class="py-6 md:py-8">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+            <i class="fas fa-ticket-alt text-white text-xl"></i>
+          </div>
+          <div>
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-900">VoucherPalace</h1>
+            <p class="text-sm text-gray-600 mt-0.5">Admin Dashboard</p>
+          </div>
+        </div>
+        <div class="mt-4 sm:mt-0 flex items-center space-x-3">
+          <div class="bg-green-100 px-4 py-2 rounded-lg">
+            <span class="text-sm font-medium text-green-800">
+              <i class="fas fa-circle text-xs mr-1 animate-pulse"></i> Live
+            </span>
+          </div>
+          <button onclick="refreshAllData()" class="p-3 bg-gray-200 rounded-lg hover:bg-gray-300 transition md:px-4 md:py-2">
+            <i class="fas fa-sync-alt text-gray-700 md:mr-2"></i>
+            <span class="hidden md:inline">Refresh</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Desktop Navigation Tabs -->
+    <div class="hidden md:flex space-x-1 mb-8 border-b border-gray-200">
+      <button onclick="switchTab('dashboard')" id="tab-dashboard" class="px-6 py-3 text-sm font-medium rounded-t-lg border-b-2 border-blue-600 text-blue-600">
+        <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+      </button>
+      <button onclick="switchTab('vouchers')" id="tab-vouchers" class="px-6 py-3 text-sm font-medium rounded-t-lg border-b-2 border-transparent hover:text-gray-700 hover:border-gray-300">
+        <i class="fas fa-ticket-alt mr-2"></i>Vouchers
+      </button>
+      <button onclick="switchTab('users')" id="tab-users" class="px-6 py-3 text-sm font-medium rounded-t-lg border-b-2 border-transparent hover:text-gray-700 hover:border-gray-300">
+        <i class="fas fa-users mr-2"></i>Users
+      </button>
+      <button onclick="switchTab('merchants')" id="tab-merchants" class="px-6 py-3 text-sm font-medium rounded-t-lg border-b-2 border-transparent hover:text-gray-700 hover:border-gray-300">
+        <i class="fas fa-store mr-2"></i>Merchants
+      </button>
+      <button onclick="switchTab('companies')" id="tab-companies" class="px-6 py-3 text-sm font-medium rounded-t-lg border-b-2 border-transparent hover:text-gray-700 hover:border-gray-300">
+        <i class="fas fa-building mr-2"></i>Companies
+      </button>
+      <button onclick="switchTab('redemptions')" id="tab-redemptions" class="px-6 py-3 text-sm font-medium rounded-t-lg border-b-2 border-transparent hover:text-gray-700 hover:border-gray-300">
+        <i class="fas fa-exchange-alt mr-2"></i>Redemptions
+      </button>
+    </div>
+
+    <!-- DASHBOARD TAB -->
+    <div id="dashboard-tab" class="tab-content">
+      <!-- Stats Cards -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-8">
+        <div class="bg-white p-4 md:p-5 rounded-xl shadow-sm border border-gray-100 action-card">
+          <div class="flex items-center">
+            <div class="p-2 md:p-3 bg-blue-50 rounded-lg mr-3 md:mr-4">
+              <i class="fas fa-ticket-alt text-blue-500 text-lg md:text-xl"></i>
+            </div>
+            <div>
+              <p class="text-xs md:text-sm text-gray-500">Vouchers</p>
+              <p id="statsVouchers" class="text-xl md:text-2xl font-bold text-gray-900">0</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-white p-4 md:p-5 rounded-xl shadow-sm border border-gray-100 action-card">
+          <div class="flex items-center">
+            <div class="p-2 md:p-3 bg-green-50 rounded-lg mr-3 md:mr-4">
+              <i class="fas fa-users text-green-500 text-lg md:text-xl"></i>
+            </div>
+            <div>
+              <p class="text-xs md:text-sm text-gray-500">Users</p>
+              <p id="statsUsers" class="text-xl md:text-2xl font-bold text-gray-900">0</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-white p-4 md:p-5 rounded-xl shadow-sm border border-gray-100 action-card">
+          <div class="flex items-center">
+            <div class="p-2 md:p-3 bg-purple-50 rounded-lg mr-3 md:mr-4">
+              <i class="fas fa-store text-purple-500 text-lg md:text-xl"></i>
+            </div>
+            <div>
+              <p class="text-xs md:text-sm text-gray-500">Merchants</p>
+              <p id="statsMerchants" class="text-xl md:text-2xl font-bold text-gray-900">0</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-white p-4 md:p-5 rounded-xl shadow-sm border border-gray-100 action-card">
+          <div class="flex items-center">
+            <div class="p-2 md:p-3 bg-yellow-50 rounded-lg mr-3 md:mr-4">
+              <i class="fas fa-building text-yellow-500 text-lg md:text-xl"></i>
+            </div>
+            <div>
+              <p class="text-xs md:text-sm text-gray-500">Companies</p>
+              <p id="statsCompanies" class="text-xl md:text-2xl font-bold text-gray-900">0</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <button onclick="openIssueModal()" class="bg-blue-600 text-white p-4 rounded-xl hover:bg-blue-700 transition touch-optimized flex flex-col items-center">
+          <i class="fas fa-plus-circle text-2xl mb-2"></i>
+          <span class="text-sm font-medium">Issue Voucher</span>
+        </button>
+        <button onclick="openRedeemModal()" class="bg-green-600 text-white p-4 rounded-xl hover:bg-green-700 transition touch-optimized flex flex-col items-center">
+          <i class="fas fa-check-circle text-2xl mb-2"></i>
+          <span class="text-sm font-medium">Redeem</span>
+        </button>
+        <button onclick="openAddUserModal()" class="bg-indigo-600 text-white p-4 rounded-xl hover:bg-indigo-700 transition touch-optimized flex flex-col items-center">
+          <i class="fas fa-user-plus text-2xl mb-2"></i>
+          <span class="text-sm font-medium">Add User</span>
+        </button>
+        <button onclick="openAddMerchantModal()" class="bg-purple-600 text-white p-4 rounded-xl hover:bg-purple-700 transition touch-optimized flex flex-col items-center">
+          <i class="fas fa-store-alt text-2xl mb-2"></i>
+          <span class="text-sm font-medium">Add Merchant</span>
+        </button>
+      </div>
+
+      <!-- Recent Activity -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">
+        <div class="p-4 md:p-6 border-b border-gray-200">
+          <h2 class="text-lg md:text-xl font-semibold text-gray-900">Recent Redemptions</h2>
+        </div>
+        <div class="divide-y divide-gray-200">
+          <div id="recentRedemptionsList" class="p-4 text-center text-gray-500">
+            Loading...
+          </div>
+        </div>
+        <div class="p-4 bg-gray-50 text-center">
+          <button onclick="switchTab('redemptions')" class="text-blue-600 text-sm font-medium">
+            View All Redemptions <i class="fas fa-arrow-right ml-1"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- VOUCHERS TAB -->
+    <div id="vouchers-tab" class="tab-content hidden">
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="p-4 md:p-6 border-b border-gray-200 flex flex-col md:flex-row md:items-center justify-between">
+          <div>
+            <h2 class="text-lg md:text-xl font-semibold text-gray-900">Voucher Management</h2>
+            <p class="text-sm text-gray-600 mt-1">Create and manage vouchers</p>
+          </div>
+          <div class="mt-3 md:mt-0">
+            <button onclick="openIssueModal()" class="w-full md:w-auto bg-blue-600 text-white px-4 py-2.5 rounded-lg hover:bg-blue-700 transition touch-optimized">
+              <i class="fas fa-plus-circle mr-2"></i>Issue New Voucher
+            </button>
+          </div>
+        </div>
+        
+        <!-- Mobile Voucher Cards -->
+        <div class="block md:hidden p-4" id="mobileVouchersList">
+          <div class="text-center text-gray-500 py-4">Loading vouchers...</div>
+        </div>
+        
+        <!-- Desktop Voucher Table -->
+        <div class="hidden md:block overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Code</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Title</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Value</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Company</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Expiry</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="vouchersTableBody" class="bg-white divide-y divide-gray-200"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- USERS TAB -->
+    <div id="users-tab" class="tab-content hidden">
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="p-4 md:p-6 border-b border-gray-200 flex flex-col md:flex-row md:items-center justify-between">
+          <div>
+            <h2 class="text-lg md:text-xl font-semibold text-gray-900">User Management</h2>
+            <p class="text-sm text-gray-600 mt-1">Manage system users and their accounts</p>
+          </div>
+          <div class="mt-3 md:mt-0">
+            <button onclick="openAddUserModal()" class="w-full md:w-auto bg-indigo-600 text-white px-4 py-2.5 rounded-lg hover:bg-indigo-700 transition touch-optimized">
+              <i class="fas fa-user-plus mr-2"></i>Add New User
+            </button>
+          </div>
+        </div>
+        
+        <!-- Search Bar -->
+        <div class="p-4 border-b border-gray-200">
+          <div class="relative">
+            <i class="fas fa-search absolute left-3 top-3.5 text-gray-400"></i>
+            <input type="text" id="userSearch" placeholder="Search users by name, email, phone..." 
+                   class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent touch-optimized">
+          </div>
+        </div>
+        
+        <!-- Mobile User Cards -->
+        <div class="block md:hidden p-4 space-y-3" id="mobileUsersList">
+          <div class="text-center text-gray-500 py-4">Loading users...</div>
+        </div>
+        
+        <!-- Desktop User Table -->
+        <div class="hidden md:block overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Full Name</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Phone</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Created</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="usersTableBody" class="bg-white divide-y divide-gray-200"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- MERCHANTS TAB -->
+    <div id="merchants-tab" class="tab-content hidden">
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="p-4 md:p-6 border-b border-gray-200 flex flex-col md:flex-row md:items-center justify-between">
+          <div>
+            <h2 class="text-lg md:text-xl font-semibold text-gray-900">Merchant Management</h2>
+            <p class="text-sm text-gray-600 mt-1">Manage partner merchants and their details</p>
+          </div>
+          <div class="mt-3 md:mt-0">
+            <button onclick="openAddMerchantModal()" class="w-full md:w-auto bg-purple-600 text-white px-4 py-2.5 rounded-lg hover:bg-purple-700 transition touch-optimized">
+              <i class="fas fa-store-alt mr-2"></i>Add New Merchant
+            </button>
+          </div>
+        </div>
+        
+        <!-- Search Bar -->
+        <div class="p-4 border-b border-gray-200">
+          <div class="relative">
+            <i class="fas fa-search absolute left-3 top-3.5 text-gray-400"></i>
+            <input type="text" id="merchantSearch" placeholder="Search merchants by name, email, phone..." 
+                   class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent touch-optimized">
+          </div>
+        </div>
+        
+        <!-- Mobile Merchant Cards -->
+        <div class="block md:hidden p-4 space-y-3" id="mobileMerchantsList">
+          <div class="text-center text-gray-500 py-4">Loading merchants...</div>
+        </div>
+        
+        <!-- Desktop Merchant Table -->
+        <div class="hidden md:block overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Phone</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="merchantsTableBody" class="bg-white divide-y divide-gray-200"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPANIES TAB -->
+    <div id="companies-tab" class="tab-content hidden">
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="p-4 md:p-6 border-b border-gray-200 flex flex-col md:flex-row md:items-center justify-between">
+          <div>
+            <h2 class="text-lg md:text-xl font-semibold text-gray-900">Company Management</h2>
+            <p class="text-sm text-gray-600 mt-1">Manage companies and their information</p>
+          </div>
+          <div class="mt-3 md:mt-0">
+            <button onclick="openAddCompanyModal()" class="w-full md:w-auto bg-yellow-600 text-white px-4 py-2.5 rounded-lg hover:bg-yellow-700 transition touch-optimized">
+              <i class="fas fa-building mr-2"></i>Add New Company
+            </button>
+          </div>
+        </div>
+        
+        <!-- Search Bar -->
+        <div class="p-4 border-b border-gray-200">
+          <div class="relative">
+            <i class="fas fa-search absolute left-3 top-3.5 text-gray-400"></i>
+            <input type="text" id="companySearch" placeholder="Search companies by name, email..." 
+                   class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent touch-optimized">
+          </div>
+        </div>
+        
+        <!-- Mobile Company Cards -->
+        <div class="block md:hidden p-4 space-y-3" id="mobileCompaniesList">
+          <div class="text-center text-gray-500 py-4">Loading companies...</div>
+        </div>
+        
+        <!-- Desktop Company Table -->
+        <div class="hidden md:block overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Phone</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="companiesTableBody" class="bg-white divide-y divide-gray-200"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- REDEMPTIONS TAB -->
+    <div id="redemptions-tab" class="tab-content hidden">
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="p-4 md:p-6 border-b border-gray-200">
+          <h2 class="text-lg md:text-xl font-semibold text-gray-900">Redemption History</h2>
+          <p class="text-sm text-gray-600 mt-1">Track all voucher redemptions</p>
+        </div>
+        
+        <!-- Search Bar -->
+        <div class="p-4 border-b border-gray-200">
+          <div class="relative">
+            <i class="fas fa-search absolute left-3 top-3.5 text-gray-400"></i>
+            <input type="text" id="redemptionSearch" placeholder="Search redemptions..." 
+                   class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent touch-optimized">
+          </div>
+        </div>
+        
+        <!-- Mobile Redemption Cards -->
+        <div class="block md:hidden p-4 space-y-3" id="mobileRedemptionsList">
+          <div class="text-center text-gray-500 py-4">Loading redemptions...</div>
+        </div>
+        
+        <!-- Desktop Redemption Table -->
+        <div class="hidden md:block overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Voucher</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">User</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Merchant</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Value</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+              </tr>
+            </thead>
+            <tbody id="redemptionsTableBody" class="bg-white divide-y divide-gray-200"></tbody>
+          </table>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="px-4 py-4 border-t border-gray-200 flex items-center justify-between">
+          <div class="text-sm text-gray-500" id="redemptionPaginationInfo">Loading...</div>
+          <div class="flex space-x-2">
+            <button onclick="prevRedemptionPage()" class="px-3 py-2 border border-gray-300 rounded-lg text-sm hover:bg-gray-50 touch-optimized">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <span class="px-3 py-2 text-sm" id="currentRedemptionPage">1</span>
+            <button onclick="nextRedemptionPage()" class="px-3 py-2 border border-gray-300 rounded-lg text-sm hover:bg-gray-50 touch-optimized">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALS (All modals remain the same as previous version) -->
+  <!-- Issue Voucher Modal -->
+  <div id="issueModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-end md:items-center justify-center z-50 hidden modal-backdrop">
+    <!-- Modal content same as before -->
+    <div class="bg-white rounded-t-xl md:rounded-xl w-full max-w-2xl mx-0 md:mx-4 max-h-[90vh] overflow-y-auto">
+      <div class="p-5 md:p-6 border-b border-gray-200 flex items-center justify-between sticky top-0 bg-white">
+        <h3 class="text-lg md:text-xl font-semibold text-gray-900">Issue New Voucher</h3>
+        <button onclick="closeIssueModal()" class="p-2 hover:bg-gray-100 rounded-lg touch-optimized">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+      <div class="p-5 md:p-6">
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Voucher Code *</label>
+            <div class="flex gap-2">
+              <input type="text" id="issueCode" placeholder="VP-1234567890" class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent touch-optimized">
+              <button onclick="generateVoucherCode()" class="px-4 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition touch-optimized">
+                <i class="fas fa-dice"></i>
+              </button>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Title *</label>
+              <input type="text" id="issueTitle" placeholder="Summer Discount" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 touch-optimized">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Value *</label>
+              <div class="relative">
+                <span class="absolute left-3 top-3.5 text-gray-500">$</span>
+                <input type="number" id="issueValue" placeholder="0.00" step="0.01" class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 touch-optimized">
+              </div>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Company *</label>
+              <select id="issueCompany" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 touch-optimized">
+                <option value="">Select Company</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Merchant (Optional)</label>
+              <select id="issueMerchant" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 touch-optimized">
+                <option value="">Select Merchant</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Assign to User</label>
+              <select id="issueUser" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 touch-optimized">
+                <option value="">Select User</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Expiry Date</label>
+              <input type="date" id="issueExpiry" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 touch-optimized">
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <textarea id="issueDescription" rows="2" placeholder="Voucher description..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 touch-optimized"></textarea>
+          </div>
+          <div id="issueResult" class="hidden"></div>
+          <div class="flex flex-col-reverse md:flex-row md:justify-end gap-3 mt-6">
+            <button onclick="closeIssueModal()" class="w-full md:w-auto px-5 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 touch-optimized">Cancel</button>
+            <button onclick="issueVoucher()" class="w-full md:w-auto px-5 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 touch-optimized">
+              <i class="fas fa-paper-plane mr-2"></i>Issue Voucher
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Redeem Voucher Modal -->
+  <div id="redeemModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-end md:items-center justify-center z-50 hidden modal-backdrop">
+    <div class="bg-white rounded-t-xl md:rounded-xl w-full max-w-2xl mx-0 md:mx-4 max-h-[90vh] overflow-y-auto">
+      <div class="p-5 md:p-6 border-b border-gray-200 flex items-center justify-between sticky top-0 bg-white">
+        <h3 class="text-lg md:text-xl font-semibold text-gray-900">Redeem Voucher</h3>
+        <button onclick="closeRedeemModal()" class="p-2 hover:bg-gray-100 rounded-lg touch-optimized">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+      <div class="p-5 md:p-6">
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Voucher Code *</label>
+            <input type="text" id="redeemVoucherCode" placeholder="Enter voucher code" 
+                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 touch-optimized">
+          </div>
+          <div id="voucherDetails" class="hidden p-4 bg-blue-50 rounded-lg border border-blue-200">
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-medium text-blue-800" id="voucherTitle"></span>
+              <span class="text-sm font-semibold text-green-700" id="voucherValue"></span>
+            </div>
+            <div class="text-xs text-blue-600" id="voucherInfo"></div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">User *</label>
+              <select id="redeemUser" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 touch-optimized">
+                <option value="">Select User</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Merchant *</label>
+              <select id="redeemMerchant" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 touch-optimized">
+                <option value="">Select Merchant</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Redeemed Value *</label>
+            <div class="relative">
+              <span class="absolute left-3 top-3.5 text-gray-500">$</span>
+              <input type="number" id="redeemValue" placeholder="0.00" step="0.01" class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 touch-optimized">
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Notes</label>
+            <textarea id="redeemNotes" rows="2" placeholder="Add any notes..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 touch-optimized"></textarea>
+          </div>
+          <div id="redeemResult" class="hidden"></div>
+          <div class="flex flex-col-reverse md:flex-row md:justify-end gap-3 mt-6">
+            <button onclick="closeRedeemModal()" class="w-full md:w-auto px-5 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 touch-optimized">Cancel</button>
+            <button onclick="redeemVoucher()" class="w-full md:w-auto px-5 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 touch-optimized">
+              <i class="fas fa-check-circle mr-2"></i>Redeem Voucher
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add User Modal -->
+  <div id="addUserModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-end md:items-center justify-center z-50 hidden modal-backdrop">
+    <div class="bg-white rounded-t-xl md:rounded-xl w-full max-w-md mx-0 md:mx-4">
+      <div class="p-5 md:p-6 border-b border-gray-200 flex items-center justify-between">
+        <h3 class="text-lg md:text-xl font-semibold text-gray-900">Add New User</h3>
+        <button onclick="closeAddUserModal()" class="p-2 hover:bg-gray-100 rounded-lg">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+      <div class="p-5 md:p-6">
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
+            <input type="text" id="userFullName" placeholder="John Doe" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 touch-optimized">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+            <input type="email" id="userEmail" placeholder="john@example.com" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 touch-optimized">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Phone *</label>
+            <input type="tel" id="userPhone" placeholder="+254700000000" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 touch-optimized">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+            <select id="userStatus" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 touch-optimized">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+          <div id="addUserResult" class="hidden"></div>
+          <button onclick="createUser()" class="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 touch-optimized">
+            <i class="fas fa-user-plus mr-2"></i>Create User
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit User Modal -->
+  <div id="editUserModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-end md:items-center justify-center z-50 hidden modal-backdrop">
+    <div class="bg-white rounded-t-xl md:rounded-xl w-full max-w-md mx-0 md:mx-4">
+      <div class="p-5 md:p-6 border-b border-gray-200 flex items-center justify-between">
+        <h3 class="text-lg md:text-xl font-semibold text-gray-900">Edit User</h3>
+        <button onclick="closeEditUserModal()" class="p-2 hover:bg-gray-100 rounded-lg">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+      <div class="p-5 md:p-6">
+        <input type="hidden" id="editUserId">
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
+            <input type="text" id="editUserFullName" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 touch-optimized">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+            <input type="email" id="editUserEmail" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 touch-optimized">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Phone *</label>
+            <input type="tel" id="editUserPhone" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 touch-optimized">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+            <select id="editUserStatus" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 touch-optimized">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+          <div id="editUserResult" class="hidden"></div>
+          <button onclick="updateUser()" class="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 touch-optimized">
+            <i class="fas fa-save mr-2"></i>Update User
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Merchant Modal -->
+  <div id="addMerchantModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-end md:items-center justify-center z-50 hidden modal-backdrop">
+    <div class="bg-white rounded-t-xl md:rounded-xl w-full max-w-md mx-0 md:mx-4">
+      <div class="p-5 md:p-6 border-b border-gray-200 flex items-center justify-between">
+        <h3 class="text-lg md:text-xl font-semibold text-gray-900">Add New Merchant</h3>
+        <button onclick="closeAddMerchantModal()" class="p-2 hover:bg-gray-100 rounded-lg">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+      <div class="p-5 md:p-6">
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Merchant Name *</label>
+            <input type="text" id="merchantName" placeholder="Cafe X" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 touch-optimized">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+            <input type="email" id="merchantEmail" placeholder="contact@cafex.com" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 touch-optimized">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Phone *</label>
+            <input type="tel" id="merchantPhone" placeholder="+254700000000" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 touch-optimized">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+            <select id="merchantStatus" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 touch-optimized">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+          <div id="addMerchantResult" class="hidden"></div>
+          <button onclick="createMerchant()" class="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 touch-optimized">
+            <i class="fas fa-store-alt mr-2"></i>Create Merchant
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Merchant Modal -->
+  <div id="editMerchantModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-end md:items-center justify-center z-50 hidden modal-backdrop">
+    <div class="bg-white rounded-t-xl md:rounded-xl w-full max-w-md mx-0 md:mx-4">
+      <div class="p-5 md:p-6 border-b border-gray-200 flex items-center justify-between">
+        <h3 class="text-lg md:text-xl font-semibold text-gray-900">Edit Merchant</h3>
+        <button onclick="closeEditMerchantModal()" class="p-2 hover:bg-gray-100 rounded-lg">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+      <div class="p-5 md:p-6">
+        <input type="hidden" id="editMerchantId">
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Merchant Name *</label>
+            <input type="text" id="editMerchantName" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 touch-optimized">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+            <input type="email" id="editMerchantEmail" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 touch-optimized">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Phone *</label>
+            <input type="tel" id="editMerchantPhone" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 touch-optimized">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+            <select id="editMerchantStatus" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 touch-optimized">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+          <div id="editMerchantResult" class="hidden"></div>
+          <button onclick="updateMerchant()" class="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 touch-optimized">
+            <i class="fas fa-save mr-2"></i>Update Merchant
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Company Modal -->
+  <div id="addCompanyModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-end md:items-center justify-center z-50 hidden modal-backdrop">
+    <div class="bg-white rounded-t-xl md:rounded-xl w-full max-w-md mx-0 md:mx-4">
+      <div class="p-5 md:p-6 border-b border-gray-200 flex items-center justify-between">
+        <h3 class="text-lg md:text-xl font-semibold text-gray-900">Add New Company</h3>
+        <button onclick="closeAddCompanyModal()" class="p-2 hover:bg-gray-100 rounded-lg">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+      <div class="p-5 md:p-6">
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Company Name *</label>
+            <input type="text" id="companyName" placeholder="Acme Corp" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 touch-optimized">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+            <input type="email" id="companyEmail" placeholder="info@acme.com" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 touch-optimized">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Phone *</label>
+            <input type="tel" id="companyPhone" placeholder="+254700000000" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 touch-optimized">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+            <select id="companyStatus" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 touch-optimized">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+          <div id="addCompanyResult" class="hidden"></div>
+          <button onclick="createCompany()" class="w-full bg-yellow-600 text-white py-3 rounded-lg hover:bg-yellow-700 touch-optimized">
+            <i class="fas fa-building mr-2"></i>Create Company
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Company Modal -->
+  <div id="editCompanyModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-end md:items-center justify-center z-50 hidden modal-backdrop">
+    <div class="bg-white rounded-t-xl md:rounded-xl w-full max-w-md mx-0 md:mx-4">
+      <div class="p-5 md:p-6 border-b border-gray-200 flex items-center justify-between">
+        <h3 class="text-lg md:text-xl font-semibold text-gray-900">Edit Company</h3>
+        <button onclick="closeEditCompanyModal()" class="p-2 hover:bg-gray-100 rounded-lg">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+      <div class="p-5 md:p-6">
+        <input type="hidden" id="editCompanyId">
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Company Name *</label>
+            <input type="text" id="editCompanyName" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 touch-optimized">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+            <input type="email" id="editCompanyEmail" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 touch-optimized">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Phone *</label>
+            <input type="tel" id="editCompanyPhone" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 touch-optimized">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+            <select id="editCompanyStatus" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 touch-optimized">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+          <div id="editCompanyResult" class="hidden"></div>
+          <button onclick="updateCompany()" class="w-full bg-yellow-600 text-white py-3 rounded-lg hover:bg-yellow-700 touch-optimized">
+            <i class="fas fa-save mr-2"></i>Update Company
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div id="deleteConfirmModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden modal-backdrop">
+    <div class="bg-white rounded-xl w-full max-w-sm mx-4 p-6">
+      <div class="text-center">
+        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+          <i class="fas fa-trash-alt text-red-600 text-xl"></i>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">Delete Item</h3>
+        <p class="text-sm text-gray-500 mb-6" id="deleteMessage">Are you sure you want to delete this item? This action cannot be undone.</p>
+        <div class="flex flex-col-reverse md:flex-row gap-3">
+          <button onclick="closeDeleteModal()" class="w-full px-4 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 touch-optimized">Cancel</button>
+          <button onclick="confirmDelete()" class="w-full px-4 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 touch-optimized">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed top-5 right-5 left-5 md:left-auto bg-green-600 text-white px-4 py-3 rounded-lg shadow-lg transform transition-all duration-300 z-50 hidden">
+    <div class="flex items-center">
+      <i class="fas fa-check-circle mr-3"></i>
+      <span id="toastMessage" class="flex-1 text-sm md:text-base"></span>
+      <button onclick="hideToast()" class="ml-4 text-white hover:text-gray-200">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+
+<script>
+  const API_BASE = 'https://voucher.agiza.co.ke';
+  
+  // State management
+  let allUsers = [];
+  let allMerchants = [];
+  let allCompanies = [];
+  let allVouchers = [];
+  let allRedemptions = [];
+  let voucherCache = {};
+  let currentRedemptionPage = 1;
+  let itemsToDelete = null;
+  
+  // ============== SAFE DOM UPDATER ==============
+  function safeSetTextContent(id, value) {
+    const element = document.getElementById(id);
+    if (element) {
+      element.textContent = value;
+    }
+  }
+
+  function safeSetHTML(id, html) {
+    const element = document.getElementById(id);
+    if (element) {
+      element.innerHTML = html;
+    }
+  }
+
+  function safeSetHidden(id, isHidden) {
+    const element = document.getElementById(id);
+    if (element) {
+      if (isHidden) {
+        element.classList.add('hidden');
+      } else {
+        element.classList.remove('hidden');
+      }
+    }
+  }
+
+  // ============== TAB SWITCHING ==============
+  function switchTab(tabName) {
+    // Hide all tabs
+    document.querySelectorAll('.tab-content').forEach(tab => {
+      tab.classList.add('hidden');
+    });
+    
+    // Show selected tab
+    const selectedTab = document.getElementById(`${tabName}-tab`);
+    if (selectedTab) {
+      selectedTab.classList.remove('hidden');
+    }
+    
+    // Update active states for mobile bottom nav
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+      btn.classList.remove('text-blue-600');
+      btn.classList.add('text-gray-600');
+    });
+    
+    const activeMobileBtn = document.querySelector(`.nav-btn[data-tab="${tabName}"]`);
+    if (activeMobileBtn) {
+      activeMobileBtn.classList.remove('text-gray-600');
+      activeMobileBtn.classList.add('text-blue-600');
+    }
+    
+    // Update active state for desktop tabs
+    const desktopTabs = document.querySelectorAll('.hidden.md\\:flex button');
+    desktopTabs.forEach(btn => {
+      btn.classList.remove('border-blue-600', 'text-blue-600');
+      btn.classList.add('border-transparent', 'text-gray-600');
+    });
+    
+    const activeDesktopTab = document.getElementById(`tab-${tabName}`);
+    if (activeDesktopTab) {
+      activeDesktopTab.classList.add('border-blue-600', 'text-blue-600');
+      activeDesktopTab.classList.remove('border-transparent', 'text-gray-600');
+    }
+    
+    // Load data for the selected tab
+    if (tabName === 'users') loadUsers();
+    if (tabName === 'merchants') loadMerchants();
+    if (tabName === 'companies') loadCompanies();
+    if (tabName === 'vouchers') loadVouchers();
+    if (tabName === 'redemptions') loadRedemptions();
+  }
+
+  // Generate random voucher code with 10 numbers
+  function generateVoucherCode() {
+    const prefix = 'VP-';
+    const numbers = Array.from({length: 10}, () => Math.floor(Math.random() * 10)).join('');
+    const code = prefix + numbers;
+    
+    const input = document.getElementById('issueCode');
+    if (input) {
+      input.value = code;
+      input.classList.add('bg-green-50', 'border-green-500');
+      setTimeout(() => {
+        input.classList.remove('bg-green-50', 'border-green-500');
+      }, 1000);
+    }
+  }
+
+  // ============== VOUCHER FUNCTIONS ==============
+
+  async function issueVoucher() {
+    const code = document.getElementById('issueCode')?.value;
+    const title = document.getElementById('issueTitle')?.value;
+    const value = document.getElementById('issueValue')?.value;
+    const companyId = document.getElementById('issueCompany')?.value;
+    const merchantId = document.getElementById('issueMerchant')?.value;
+    const userId = document.getElementById('issueUser')?.value;
+    const expiry = document.getElementById('issueExpiry')?.value;
+    const description = document.getElementById('issueDescription')?.value;
+    
+    if (!code || !title || !value || !companyId) {
+      showResult('issueResult', 'Please fill all required fields', 'error');
+      return;
+    }
+    
+    const payload = {
+      code: code,
+      title: title,
+      voucher_value: value,
+      company_id: parseInt(companyId),
+      merchant_id: merchantId ? parseInt(merchantId) : null,
+      assigned_user_id: userId ? parseInt(userId) : null,
+      expiry_date: expiry || null,
+      description: description || null,
+      value_type: 'fixed',
+      min_spend: '0.00',
+      max_redemptions: 1
+    };
+    
+    try {
+      const res = await fetch(`${API_BASE}/vouchers/issue`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      
+      const data = await res.json();
+      
+      if (res.ok && data.voucher) {
+        showResult('issueResult', `Voucher issued: ${data.voucher.code}`, 'success');
+        showToast(`Voucher "${data.voucher.code}" issued successfully`);
+        
+        // Clear form
+        if (document.getElementById('issueCode')) document.getElementById('issueCode').value = '';
+        if (document.getElementById('issueTitle')) document.getElementById('issueTitle').value = '';
+        if (document.getElementById('issueValue')) document.getElementById('issueValue').value = '';
+        if (document.getElementById('issueDescription')) document.getElementById('issueDescription').value = '';
+        if (document.getElementById('issueExpiry')) document.getElementById('issueExpiry').value = '';
+        
+        voucherCache[data.voucher.code] = data.voucher;
+        generateVoucherCode();
+        
+        setTimeout(() => closeIssueModal(), 2000);
+        loadVouchers();
+      } else {
+        showResult('issueResult', `Error: ${data.error || 'Unknown error'}`, 'error');
+      }
+    } catch (error) {
+      showResult('issueResult', 'Network error', 'error');
+    }
+  }
+
+  async function redeemVoucher() {
+    const voucherCode = document.getElementById('redeemVoucherCode')?.value;
+    const voucher = voucherCache[voucherCode];
+    
+    if (!voucher) {
+      showResult('redeemResult', 'Please enter a valid voucher code', 'error');
+      return;
+    }
+    
+    const userId = document.getElementById('redeemUser')?.value;
+    const merchantId = document.getElementById('redeemMerchant')?.value;
+    const redeemedValue = document.getElementById('redeemValue')?.value;
+    const notes = document.getElementById('redeemNotes')?.value;
+    
+    if (!userId || !merchantId || !redeemedValue) {
+      showResult('redeemResult', 'Please fill all required fields', 'error');
+      return;
+    }
+    
+    const payload = {
+      voucher_id: voucher.id,
+      user_id: parseInt(userId),
+      merchant_id: parseInt(merchantId),
+      redeemed_value: redeemedValue,
+      notes: notes || null
+    };
+    
+    try {
+      const res = await fetch(`${API_BASE}/vouchers/redeem`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      
+      const data = await res.json();
+      
+      if (res.ok && data.redemption) {
+        showResult('redeemResult', `Voucher redeemed! ID: ${data.redemption.id}`, 'success');
+        showToast(`Voucher redeemed for $${payload.redeemed_value}`);
+        
+        // Clear form
+        if (document.getElementById('redeemVoucherCode')) document.getElementById('redeemVoucherCode').value = '';
+        if (document.getElementById('redeemValue')) document.getElementById('redeemValue').value = '';
+        if (document.getElementById('redeemNotes')) document.getElementById('redeemNotes').value = '';
+        safeSetHidden('voucherDetails', true);
+        
+        setTimeout(() => closeRedeemModal(), 2000);
+        loadRedemptions();
+      } else {
+        showResult('redeemResult', `Error: ${data.error || 'Unknown error'}`, 'error');
+      }
+    } catch (error) {
+      showResult('redeemResult', 'Network error', 'error');
+    }
+  }
+
+  async function fetchVoucherDetails(code) {
+    if (!code || !code.trim()) return;
+    
+    if (voucherCache[code]) {
+      populateVoucherDetails(voucherCache[code]);
+      return;
+    }
+    
+    try {
+      const res = await fetch(`${API_BASE}/vouchers`);
+      const vouchers = await res.json();
+      const voucher = vouchers.find(v => v.code === code);
+      
+      if (voucher) {
+        voucherCache[code] = voucher;
+        populateVoucherDetails(voucher);
+        showToast(`Voucher "${voucher.title}" loaded`);
+      } else {
+        safeSetHidden('voucherDetails', true);
+        showResult('redeemResult', 'Voucher not found', 'error');
+      }
+    } catch (error) {
+      showResult('redeemResult', 'Could not fetch voucher', 'error');
+    }
+  }
+
+  function populateVoucherDetails(voucher) {
+    safeSetTextContent('voucherTitle', voucher.title);
+    safeSetTextContent('voucherValue', `$${voucher.voucher_value}`);
+    
+    let infoText = `Code: ${voucher.code}`;
+    if (voucher.description) infoText += ` • ${voucher.description}`;
+    if (voucher.expiry_date) {
+      const expiry = new Date(voucher.expiry_date).toLocaleDateString();
+      infoText += ` • Expires: ${expiry}`;
+    }
+    
+    safeSetTextContent('voucherInfo', infoText);
+    safeSetHidden('voucherDetails', false);
+    
+    const redeemValueInput = document.getElementById('redeemValue');
+    if (redeemValueInput) {
+      redeemValueInput.value = voucher.voucher_value;
+    }
+  }
+
+  async function loadVouchers() {
+    try {
+      const res = await fetch(`${API_BASE}/vouchers`);
+      allVouchers = await res.json();
+      renderVouchersTable();
+      safeSetTextContent('statsVouchers', allVouchers.length);
+    } catch (error) {
+      console.error('Failed to load vouchers:', error);
+    }
+  }
+
+  function renderVouchersTable() {
+    // Desktop view
+    const desktopBody = document.getElementById('vouchersTableBody');
+    if (desktopBody) {
+      desktopBody.innerHTML = allVouchers.map(v => `
+        <tr class="hover:bg-gray-50">
+          <td class="px-6 py-4 whitespace-nowrap text-sm">${v.id}</td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="font-mono bg-gray-100 px-2 py-1 rounded text-sm">${v.code}</span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm">${v.title}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-700">$${v.voucher_value}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm">${v.Company?.name || v.company_id}</td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-2 py-1 text-xs rounded-full ${v.voucher_status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">
+              ${v.voucher_status}
+            </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm">${v.expiry_date ? new Date(v.expiry_date).toLocaleDateString() : 'N/A'}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm">
+            <button onclick="viewVoucher(${v.id})" class="text-blue-600 hover:text-blue-800 mr-2">
+              <i class="fas fa-eye"></i>
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+    
+    // Mobile view
+    const mobileList = document.getElementById('mobileVouchersList');
+    if (mobileList) {
+      if (allVouchers.length === 0) {
+        mobileList.innerHTML = '<div class="text-center text-gray-500 py-4">No vouchers found</div>';
+      } else {
+        mobileList.innerHTML = allVouchers.slice(0, 5).map(v => `
+          <div class="bg-white border border-gray-200 rounded-lg p-4 mb-3">
+            <div class="flex justify-between items-start mb-2">
+              <div>
+                <span class="font-mono bg-gray-100 px-2 py-1 rounded text-sm">${v.code}</span>
+                <h3 class="font-medium text-gray-900 mt-2">${v.title}</h3>
+              </div>
+              <span class="text-sm font-semibold text-green-700">$${v.voucher_value}</span>
+            </div>
+            <div class="flex justify-between items-center mt-3">
+              <span class="text-xs text-gray-500">${v.Company?.name || 'N/A'}</span>
+              <span class="px-2 py-1 text-xs rounded-full ${v.voucher_status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">
+                ${v.voucher_status}
+              </span>
+            </div>
+          </div>
+        `).join('');
+        
+        if (allVouchers.length > 5) {
+          mobileList.innerHTML += `<div class="text-center pt-2"><button onclick="switchTab('vouchers')" class="text-blue-600 text-sm">View all ${allVouchers.length} vouchers →</button></div>`;
+        }
+      }
+    }
+  }
+
+  // ============== USER CRUD FUNCTIONS ==============
+
+  async function loadUsers() {
+    try {
+      const res = await fetch(`${API_BASE}/users`);
+      allUsers = await res.json();
+      renderUsersTable();
+      safeSetTextContent('statsUsers', allUsers.length);
+    } catch (error) {
+      console.error('Failed to load users:', error);
+    }
+  }
+
+  function renderUsersTable() {
+    const searchInput = document.getElementById('userSearch');
+    const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+    
+    const filteredUsers = searchTerm ? allUsers.filter(u => 
+      u.full_name?.toLowerCase().includes(searchTerm) ||
+      u.email?.toLowerCase().includes(searchTerm) ||
+      u.phone?.includes(searchTerm)
+    ) : allUsers;
+    
+    // Desktop view
+    const desktopBody = document.getElementById('usersTableBody');
+    if (desktopBody) {
+      desktopBody.innerHTML = filteredUsers.map(u => `
+        <tr class="hover:bg-gray-50">
+          <td class="px-6 py-4 whitespace-nowrap text-sm">${u.id}</td>
+          <td class="px-6 py-4 whitespace-nowrap font-medium">${u.full_name || ''}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm">${u.email || '-'}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm">${u.phone || '-'}</td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-2 py-1 text-xs rounded-full ${u.user_status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">
+              ${u.user_status || 'active'}
+            </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm">${u.created_at ? new Date(u.created_at).toLocaleDateString() : '-'}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm">
+            <button onclick="editUser(${u.id})" class="text-indigo-600 hover:text-indigo-800 mr-3">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button onclick="deleteUser(${u.id})" class="text-red-600 hover:text-red-800">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+    
+    // Mobile view
+    const mobileList = document.getElementById('mobileUsersList');
+    if (mobileList) {
+      if (filteredUsers.length === 0) {
+        mobileList.innerHTML = '<div class="text-center text-gray-500 py-4">No users found</div>';
+      } else {
+        mobileList.innerHTML = filteredUsers.slice(0, 5).map(u => `
+          <div class="bg-white border border-gray-200 rounded-lg p-4">
+            <div class="flex justify-between items-start">
+              <div>
+                <h3 class="font-medium text-gray-900">${u.full_name || ''}</h3>
+                <p class="text-sm text-gray-600 mt-1">${u.email || 'No email'}</p>
+                <p class="text-sm text-gray-600">${u.phone || 'No phone'}</p>
+              </div>
+              <span class="px-2 py-1 text-xs rounded-full ${u.user_status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">
+                ${u.user_status}
+              </span>
+            </div>
+            <div class="flex justify-end space-x-3 mt-4 pt-3 border-t border-gray-100">
+              <button onclick="editUser(${u.id})" class="text-indigo-600 hover:text-indigo-800 px-3 py-2">
+                <i class="fas fa-edit mr-1"></i>Edit
+              </button>
+              <button onclick="deleteUser(${u.id})" class="text-red-600 hover:text-red-800 px-3 py-2">
+                <i class="fas fa-trash-alt mr-1"></i>Delete
+              </button>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+  }
+
+  async function createUser() {
+    const fullName = document.getElementById('userFullName')?.value;
+    const email = document.getElementById('userEmail')?.value;
+    const phone = document.getElementById('userPhone')?.value;
+    const status = document.getElementById('userStatus')?.value;
+    
+    if (!fullName || !email || !phone) {
+      showResult('addUserResult', 'Please fill all required fields', 'error');
+      return;
+    }
+    
+    const payload = {
+      full_name: fullName,
+      email: email,
+      phone: phone,
+      user_status: status || 'active'
+    };
+    
+    try {
+      const res = await fetch(`${API_BASE}/users`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      
+      const data = await res.json();
+      
+      if (res.ok) {
+        showResult('addUserResult', 'User created successfully!', 'success');
+        showToast(`User ${payload.full_name} created`);
+        closeAddUserModal();
+        loadUsers();
+        fetchLists();
+      } else {
+        showResult('addUserResult', `Error: ${data.error || 'Failed to create user'}`, 'error');
+      }
+    } catch (error) {
+      showResult('addUserResult', 'Network error', 'error');
+    }
+  }
+
+  async function editUser(id) {
+    const user = allUsers.find(u => u.id === id);
+    if (!user) return;
+    
+    const editId = document.getElementById('editUserId');
+    const editName = document.getElementById('editUserFullName');
+    const editEmail = document.getElementById('editUserEmail');
+    const editPhone = document.getElementById('editUserPhone');
+    const editStatus = document.getElementById('editUserStatus');
+    
+    if (editId) editId.value = user.id;
+    if (editName) editName.value = user.full_name || '';
+    if (editEmail) editEmail.value = user.email || '';
+    if (editPhone) editPhone.value = user.phone || '';
+    if (editStatus) editStatus.value = user.user_status || 'active';
+    
+    openEditUserModal();
+  }
+
+  async function updateUser() {
+    const id = document.getElementById('editUserId')?.value;
+    const fullName = document.getElementById('editUserFullName')?.value;
+    const email = document.getElementById('editUserEmail')?.value;
+    const phone = document.getElementById('editUserPhone')?.value;
+    const status = document.getElementById('editUserStatus')?.value;
+    
+    if (!id || !fullName || !email || !phone) {
+      showResult('editUserResult', 'Please fill all required fields', 'error');
+      return;
+    }
+    
+    const payload = {
+      full_name: fullName,
+      email: email,
+      phone: phone,
+      user_status: status || 'active'
+    };
+    
+    try {
+      const res = await fetch(`${API_BASE}/users/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      
+      const data = await res.json();
+      
+      if (res.ok) {
+        showResult('editUserResult', 'User updated successfully!', 'success');
+        showToast(`User ${payload.full_name} updated`);
+        closeEditUserModal();
+        loadUsers();
+        fetchLists();
+      } else {
+        showResult('editUserResult', `Error: ${data.error || 'Failed to update user'}`, 'error');
+      }
+    } catch (error) {
+      showResult('editUserResult', 'Network error', 'error');
+    }
+  }
+
+  function deleteUser(id) {
+    itemsToDelete = { type: 'user', id };
+    safeSetTextContent('deleteMessage', 'Are you sure you want to delete this user? This action cannot be undone.');
+    openDeleteModal();
+  }
+
+  // ============== MERCHANT CRUD FUNCTIONS ==============
+
+  async function loadMerchants() {
+    try {
+      const res = await fetch(`${API_BASE}/merchants`);
+      allMerchants = await res.json();
+      renderMerchantsTable();
+      safeSetTextContent('statsMerchants', allMerchants.length);
+    } catch (error) {
+      console.error('Failed to load merchants:', error);
+    }
+  }
+
+  function renderMerchantsTable() {
+    const searchInput = document.getElementById('merchantSearch');
+    const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+    
+    const filteredMerchants = searchTerm ? allMerchants.filter(m => 
+      m.name?.toLowerCase().includes(searchTerm) ||
+      m.contact_email?.toLowerCase().includes(searchTerm) ||
+      m.contact_phone?.includes(searchTerm)
+    ) : allMerchants;
+    
+    // Desktop view
+    const desktopBody = document.getElementById('merchantsTableBody');
+    if (desktopBody) {
+      desktopBody.innerHTML = filteredMerchants.map(m => `
+        <tr class="hover:bg-gray-50">
+          <td class="px-6 py-4 whitespace-nowrap text-sm">${m.id}</td>
+          <td class="px-6 py-4 whitespace-nowrap font-medium">${m.name}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm">${m.contact_email || '-'}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm">${m.contact_phone || '-'}</td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-2 py-1 text-xs rounded-full ${m.merchant_status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">
+              ${m.merchant_status || 'active'}
+            </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm">
+            <button onclick="editMerchant(${m.id})" class="text-indigo-600 hover:text-indigo-800 mr-3">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button onclick="deleteMerchant(${m.id})" class="text-red-600 hover:text-red-800">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+    
+    // Mobile view
+    const mobileList = document.getElementById('mobileMerchantsList');
+    if (mobileList) {
+      if (filteredMerchants.length === 0) {
+        mobileList.innerHTML = '<div class="text-center text-gray-500 py-4">No merchants found</div>';
+      } else {
+        mobileList.innerHTML = filteredMerchants.slice(0, 5).map(m => `
+          <div class="bg-white border border-gray-200 rounded-lg p-4">
+            <div class="flex justify-between items-start">
+              <div>
+                <h3 class="font-medium text-gray-900">${m.name}</h3>
+                <p class="text-sm text-gray-600 mt-1">${m.contact_email || 'No email'}</p>
+                <p class="text-sm text-gray-600">${m.contact_phone || 'No phone'}</p>
+              </div>
+              <span class="px-2 py-1 text-xs rounded-full ${m.merchant_status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">
+                ${m.merchant_status}
+              </span>
+            </div>
+            <div class="flex justify-end space-x-3 mt-4 pt-3 border-t border-gray-100">
+              <button onclick="editMerchant(${m.id})" class="text-indigo-600 hover:text-indigo-800 px-3 py-2">
+                <i class="fas fa-edit mr-1"></i>Edit
+              </button>
+              <button onclick="deleteMerchant(${m.id})" class="text-red-600 hover:text-red-800 px-3 py-2">
+                <i class="fas fa-trash-alt mr-1"></i>Delete
+              </button>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+  }
+
+  async function createMerchant() {
+    const name = document.getElementById('merchantName')?.value;
+    const email = document.getElementById('merchantEmail')?.value;
+    const phone = document.getElementById('merchantPhone')?.value;
+    const status = document.getElementById('merchantStatus')?.value;
+    
+    if (!name || !email || !phone) {
+      showResult('addMerchantResult', 'Please fill all required fields', 'error');
+      return;
+    }
+    
+    const payload = {
+      name: name,
+      contact_email: email,
+      contact_phone: phone,
+      merchant_status: status || 'active'
+    };
+    
+    try {
+      const res = await fetch(`${API_BASE}/merchants`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      
+      const data = await res.json();
+      
+      if (res.ok) {
+        showResult('addMerchantResult', 'Merchant created successfully!', 'success');
+        showToast(`Merchant ${payload.name} created`);
+        closeAddMerchantModal();
+        loadMerchants();
+        fetchLists();
+      } else {
+        showResult('addMerchantResult', `Error: ${data.error || 'Failed to create merchant'}`, 'error');
+      }
+    } catch (error) {
+      showResult('addMerchantResult', 'Network error', 'error');
+    }
+  }
+
+  async function editMerchant(id) {
+    const merchant = allMerchants.find(m => m.id === id);
+    if (!merchant) return;
+    
+    const editId = document.getElementById('editMerchantId');
+    const editName = document.getElementById('editMerchantName');
+    const editEmail = document.getElementById('editMerchantEmail');
+    const editPhone = document.getElementById('editMerchantPhone');
+    const editStatus = document.getElementById('editMerchantStatus');
+    
+    if (editId) editId.value = merchant.id;
+    if (editName) editName.value = merchant.name || '';
+    if (editEmail) editEmail.value = merchant.contact_email || '';
+    if (editPhone) editPhone.value = merchant.contact_phone || '';
+    if (editStatus) editStatus.value = merchant.merchant_status || 'active';
+    
+    openEditMerchantModal();
+  }
+
+  async function updateMerchant() {
+    const id = document.getElementById('editMerchantId')?.value;
+    const name = document.getElementById('editMerchantName')?.value;
+    const email = document.getElementById('editMerchantEmail')?.value;
+    const phone = document.getElementById('editMerchantPhone')?.value;
+    const status = document.getElementById('editMerchantStatus')?.value;
+    
+    if (!id || !name || !email || !phone) {
+      showResult('editMerchantResult', 'Please fill all required fields', 'error');
+      return;
+    }
+    
+    const payload = {
+      name: name,
+      contact_email: email,
+      contact_phone: phone,
+      merchant_status: status || 'active'
+    };
+    
+    try {
+      const res = await fetch(`${API_BASE}/merchants/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      
+      const data = await res.json();
+      
+      if (res.ok) {
+        showResult('editMerchantResult', 'Merchant updated successfully!', 'success');
+        showToast(`Merchant ${payload.name} updated`);
+        closeEditMerchantModal();
+        loadMerchants();
+        fetchLists();
+      } else {
+        showResult('editMerchantResult', `Error: ${data.error || 'Failed to update merchant'}`, 'error');
+      }
+    } catch (error) {
+      showResult('editMerchantResult', 'Network error', 'error');
+    }
+  }
+
+  function deleteMerchant(id) {
+    itemsToDelete = { type: 'merchant', id };
+    safeSetTextContent('deleteMessage', 'Are you sure you want to delete this merchant? This action cannot be undone.');
+    openDeleteModal();
+  }
+
+  // ============== COMPANY CRUD FUNCTIONS ==============
+
+  async function loadCompanies() {
+    try {
+      const res = await fetch(`${API_BASE}/companies`);
+      allCompanies = await res.json();
+      renderCompaniesTable();
+      safeSetTextContent('statsCompanies', allCompanies.length);
+    } catch (error) {
+      console.error('Failed to load companies:', error);
+    }
+  }
+
+  function renderCompaniesTable() {
+    const searchInput = document.getElementById('companySearch');
+    const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+    
+    const filteredCompanies = searchTerm ? allCompanies.filter(c => 
+      c.name?.toLowerCase().includes(searchTerm) ||
+      c.contact_email?.toLowerCase().includes(searchTerm) ||
+      c.contact_phone?.includes(searchTerm)
+    ) : allCompanies;
+    
+    // Desktop view
+    const desktopBody = document.getElementById('companiesTableBody');
+    if (desktopBody) {
+      desktopBody.innerHTML = filteredCompanies.map(c => `
+        <tr class="hover:bg-gray-50">
+          <td class="px-6 py-4 whitespace-nowrap text-sm">${c.id}</td>
+          <td class="px-6 py-4 whitespace-nowrap font-medium">${c.name}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm">${c.contact_email || '-'}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm">${c.contact_phone || '-'}</td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-2 py-1 text-xs rounded-full ${c.company_status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">
+              ${c.company_status || 'active'}
+            </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm">
+            <button onclick="editCompany(${c.id})" class="text-indigo-600 hover:text-indigo-800 mr-3">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button onclick="deleteCompany(${c.id})" class="text-red-600 hover:text-red-800">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+    
+    // Mobile view
+    const mobileList = document.getElementById('mobileCompaniesList');
+    if (mobileList) {
+      if (filteredCompanies.length === 0) {
+        mobileList.innerHTML = '<div class="text-center text-gray-500 py-4">No companies found</div>';
+      } else {
+        mobileList.innerHTML = filteredCompanies.slice(0, 5).map(c => `
+          <div class="bg-white border border-gray-200 rounded-lg p-4">
+            <div class="flex justify-between items-start">
+              <div>
+                <h3 class="font-medium text-gray-900">${c.name}</h3>
+                <p class="text-sm text-gray-600 mt-1">${c.contact_email || 'No email'}</p>
+                <p class="text-sm text-gray-600">${c.contact_phone || 'No phone'}</p>
+              </div>
+              <span class="px-2 py-1 text-xs rounded-full ${c.company_status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">
+                ${c.company_status}
+              </span>
+            </div>
+            <div class="flex justify-end space-x-3 mt-4 pt-3 border-t border-gray-100">
+              <button onclick="editCompany(${c.id})" class="text-indigo-600 hover:text-indigo-800 px-3 py-2">
+                <i class="fas fa-edit mr-1"></i>Edit
+              </button>
+              <button onclick="deleteCompany(${c.id})" class="text-red-600 hover:text-red-800 px-3 py-2">
+                <i class="fas fa-trash-alt mr-1"></i>Delete
+              </button>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+  }
+
+  async function createCompany() {
+    const name = document.getElementById('companyName')?.value;
+    const email = document.getElementById('companyEmail')?.value;
+    const phone = document.getElementById('companyPhone')?.value;
+    const status = document.getElementById('companyStatus')?.value;
+    
+    if (!name || !email || !phone) {
+      showResult('addCompanyResult', 'Please fill all required fields', 'error');
+      return;
+    }
+    
+    const payload = {
+      name: name,
+      contact_email: email,
+      contact_phone: phone,
+      company_status: status || 'active'
+    };
+    
+    try {
+      const res = await fetch(`${API_BASE}/companies`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      
+      const data = await res.json();
+      
+      if (res.ok) {
+        showResult('addCompanyResult', 'Company created successfully!', 'success');
+        showToast(`Company ${payload.name} created`);
+        closeAddCompanyModal();
+        loadCompanies();
+        fetchLists();
+      } else {
+        showResult('addCompanyResult', `Error: ${data.error || 'Failed to create company'}`, 'error');
+      }
+    } catch (error) {
+      showResult('addCompanyResult', 'Network error', 'error');
+    }
+  }
+
+  async function editCompany(id) {
+    const company = allCompanies.find(c => c.id === id);
+    if (!company) return;
+    
+    const editId = document.getElementById('editCompanyId');
+    const editName = document.getElementById('editCompanyName');
+    const editEmail = document.getElementById('editCompanyEmail');
+    const editPhone = document.getElementById('editCompanyPhone');
+    const editStatus = document.getElementById('editCompanyStatus');
+    
+    if (editId) editId.value = company.id;
+    if (editName) editName.value = company.name || '';
+    if (editEmail) editEmail.value = company.contact_email || '';
+    if (editPhone) editPhone.value = company.contact_phone || '';
+    if (editStatus) editStatus.value = company.company_status || 'active';
+    
+    openEditCompanyModal();
+  }
+
+  async function updateCompany() {
+    const id = document.getElementById('editCompanyId')?.value;
+    const name = document.getElementById('editCompanyName')?.value;
+    const email = document.getElementById('editCompanyEmail')?.value;
+    const phone = document.getElementById('editCompanyPhone')?.value;
+    const status = document.getElementById('editCompanyStatus')?.value;
+    
+    if (!id || !name || !email || !phone) {
+      showResult('editCompanyResult', 'Please fill all required fields', 'error');
+      return;
+    }
+    
+    const payload = {
+      name: name,
+      contact_email: email,
+      contact_phone: phone,
+      company_status: status || 'active'
+    };
+    
+    try {
+      const res = await fetch(`${API_BASE}/companies/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      
+      const data = await res.json();
+      
+      if (res.ok) {
+        showResult('editCompanyResult', 'Company updated successfully!', 'success');
+        showToast(`Company ${payload.name} updated`);
+        closeEditCompanyModal();
+        loadCompanies();
+        fetchLists();
+      } else {
+        showResult('editCompanyResult', `Error: ${data.error || 'Failed to update company'}`, 'error');
+      }
+    } catch (error) {
+      showResult('editCompanyResult', 'Network error', 'error');
+    }
+  }
+
+  function deleteCompany(id) {
+    itemsToDelete = { type: 'company', id };
+    safeSetTextContent('deleteMessage', 'Are you sure you want to delete this company? This action cannot be undone.');
+    openDeleteModal();
+  }
+
+  // ============== REDEMPTION FUNCTIONS ==============
+
+  async function loadRedemptions() {
+    try {
+      const res = await fetch(`${API_BASE}/voucher-redemptions?sort=redeemed_at&order=DESC`);
+      allRedemptions = await res.json();
+      renderRedemptionsTable();
+      renderRecentRedemptions();
+      safeSetTextContent('totalRedemptions', allRedemptions.length);
+    } catch (error) {
+      console.error('Failed to load redemptions:', error);
+      safeSetTextContent('totalRedemptions', '0');
+    }
+  }
+
+  function renderRedemptionsTable() {
+    const searchInput = document.getElementById('redemptionSearch');
+    const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+    
+    let filteredRedemptions = allRedemptions;
+    
+    if (searchTerm) {
+      filteredRedemptions = allRedemptions.filter(r => 
+        (r.Voucher?.code && r.Voucher.code.toLowerCase().includes(searchTerm)) ||
+        (r.User?.full_name && r.User.full_name.toLowerCase().includes(searchTerm)) ||
+        (r.Merchant?.name && r.Merchant.name.toLowerCase().includes(searchTerm))
+      );
+    }
+    
+    const startIndex = (currentRedemptionPage - 1) * 10;
+    const endIndex = startIndex + 10;
+    const pageRedemptions = filteredRedemptions.slice(startIndex, endIndex);
+    
+    // Desktop view
+    const desktopBody = document.getElementById('redemptionsTableBody');
+    if (desktopBody) {
+      if (pageRedemptions.length === 0) {
+        desktopBody.innerHTML = '<tr><td colspan="6" class="px-6 py-8 text-center text-gray-500">No redemptions found</td></tr>';
+      } else {
+        desktopBody.innerHTML = pageRedemptions.map(r => `
+          <tr class="hover:bg-gray-50">
+            <td class="px-6 py-4 whitespace-nowrap text-sm">${r.id}</td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span class="font-mono bg-gray-100 px-2 py-1 rounded text-sm">${r.Voucher?.code || r.voucher_id}</span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm">${r.User?.full_name || r.user_id}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm">${r.Merchant?.name || r.merchant_id}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-700">$${r.redeemed_value}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm">${r.redeemed_at ? new Date(r.redeemed_at).toLocaleString() : 'N/A'}</td>
+          </tr>
+        `).join('');
+      }
+    }
+    
+    // Mobile view
+    const mobileList = document.getElementById('mobileRedemptionsList');
+    if (mobileList) {
+      if (pageRedemptions.length === 0) {
+        mobileList.innerHTML = '<div class="text-center text-gray-500 py-4">No redemptions found</div>';
+      } else {
+        mobileList.innerHTML = pageRedemptions.slice(0, 5).map(r => `
+          <div class="bg-white border border-gray-200 rounded-lg p-4">
+            <div class="flex justify-between items-start mb-2">
+              <span class="font-mono bg-gray-100 px-2 py-1 rounded text-sm">${r.Voucher?.code || r.voucher_id}</span>
+              <span class="text-sm font-semibold text-green-700">$${r.redeemed_value}</span>
+            </div>
+            <div class="text-sm">
+              <div class="flex items-center mt-2">
+                <i class="fas fa-user text-gray-400 mr-2 w-4"></i>
+                <span>${r.User?.full_name || r.user_id}</span>
+              </div>
+              <div class="flex items-center mt-1">
+                <i class="fas fa-store text-gray-400 mr-2 w-4"></i>
+                <span>${r.Merchant?.name || r.merchant_id}</span>
+              </div>
+              <div class="flex items-center mt-1 text-gray-500">
+                <i class="fas fa-clock text-gray-400 mr-2 w-4"></i>
+                <span>${r.redeemed_at ? new Date(r.redeemed_at).toLocaleString() : 'N/A'}</span>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+    
+    const paginationInfo = document.getElementById('redemptionPaginationInfo');
+    if (paginationInfo) {
+      if (filteredRedemptions.length === 0) {
+        paginationInfo.textContent = 'No redemptions';
+      } else {
+        paginationInfo.textContent = `Showing ${startIndex + 1}-${Math.min(endIndex, filteredRedemptions.length)} of ${filteredRedemptions.length}`;
+      }
+    }
+    
+    safeSetTextContent('currentRedemptionPage', currentRedemptionPage);
+  }
+
+  function renderRecentRedemptions() {
+    const recentList = document.getElementById('recentRedemptionsList');
+    if (recentList) {
+      if (allRedemptions.length === 0) {
+        recentList.innerHTML = '<div class="p-8 text-center text-gray-500">No redemptions yet</div>';
+      } else {
+        const recent = allRedemptions.slice(0, 5);
+        recentList.innerHTML = recent.map(r => `
+          <div class="flex items-center justify-between p-4 hover:bg-gray-50">
+            <div class="flex items-center">
+              <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                <i class="fas fa-ticket-alt text-blue-600 text-sm"></i>
+              </div>
+              <div>
+                <p class="text-sm font-medium text-gray-900">${r.Voucher?.code || r.voucher_id}</p>
+                <p class="text-xs text-gray-500">${r.User?.full_name || r.user_id} • ${r.Merchant?.name || r.merchant_id}</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <p class="text-sm font-semibold text-green-700">$${r.redeemed_value}</p>
+              <p class="text-xs text-gray-500">${r.redeemed_at ? new Date(r.redeemed_at).toLocaleDateString() : ''}</p>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+  }
+
+  function nextRedemptionPage() {
+    const totalPages = Math.ceil(allRedemptions.length / 10);
+    if (currentRedemptionPage < totalPages) {
+      currentRedemptionPage++;
+      renderRedemptionsTable();
+    }
+  }
+
+  function prevRedemptionPage() {
+    if (currentRedemptionPage > 1) {
+      currentRedemptionPage--;
+      renderRedemptionsTable();
+    }
+  }
+
+  // ============== DELETE CONFIRMATION ==============
+
+  async function confirmDelete() {
+    if (!itemsToDelete) return;
+    
+    const { type, id } = itemsToDelete;
+    
+    try {
+      let endpoint = '';
+      switch(type) {
+        case 'user': endpoint = `${API_BASE}/users/${id}`; break;
+        case 'merchant': endpoint = `${API_BASE}/merchants/${id}`; break;
+        case 'company': endpoint = `${API_BASE}/companies/${id}`; break;
+        default: return;
+      }
+      
+      const res = await fetch(endpoint, { method: 'DELETE' });
+      
+      if (res.ok) {
+        showToast(`${type} deleted successfully`);
+        closeDeleteModal();
+        
+        // Refresh appropriate data
+        if (type === 'user') loadUsers();
+        if (type === 'merchant') loadMerchants();
+        if (type === 'company') loadCompanies();
+        
+        fetchLists();
+      } else {
+        showToast(`Failed to delete ${type}`, 'error');
+      }
+    } catch (error) {
+      showToast(`Error deleting ${type}`, 'error');
+    }
+    
+    itemsToDelete = null;
+  }
+
+  // ============== FETCH LISTS ==============
+
+  async function fetchLists() {
+    try {
+      const [usersRes, merchantsRes, companiesRes, vouchersRes] = await Promise.all([
+        fetch(`${API_BASE}/users`),
+        fetch(`${API_BASE}/merchants`),
+        fetch(`${API_BASE}/companies`),
+        fetch(`${API_BASE}/vouchers`)
+      ]);
+      
+      allUsers = await usersRes.json();
+      allMerchants = await merchantsRes.json();
+      allCompanies = await companiesRes.json();
+      allVouchers = await vouchersRes.json();
+      
+      // Update stats safely
+      safeSetTextContent('statsVouchers', allVouchers.length);
+      safeSetTextContent('statsUsers', allUsers.length);
+      safeSetTextContent('statsMerchants', allMerchants.length);
+      safeSetTextContent('statsCompanies', allCompanies.length);
+      safeSetTextContent('activeUsers', allUsers.length);
+      safeSetTextContent('totalMerchants', allMerchants.length);
+      safeSetTextContent('totalCompanies', allCompanies.length);
+      
+      const activeVouchers = allVouchers.filter(v => v.voucher_status === 'active').length;
+      safeSetTextContent('activeVouchers', activeVouchers);
+
+      // Populate user selects
+      const userSelects = ['issueUser', 'redeemUser'];
+      userSelects.forEach(id => {
+        const sel = document.getElementById(id);
+        if (sel) {
+          sel.innerHTML = '<option value="">Select User</option>';
+          allUsers.forEach(u => {
+            sel.innerHTML += `<option value="${u.id}">${u.full_name || `User ${u.id}`}</option>`;
+          });
+        }
+      });
+
+      // Populate merchant selects
+      const merchantSelects = ['issueMerchant', 'redeemMerchant'];
+      merchantSelects.forEach(id => {
+        const sel = document.getElementById(id);
+        if (sel) {
+          sel.innerHTML = '<option value="">Select Merchant</option>';
+          allMerchants.forEach(m => {
+            sel.innerHTML += `<option value="${m.id}">${m.name}</option>`;
+          });
+        }
+      });
+
+      // Populate company select
+      const companySelect = document.getElementById('issueCompany');
+      if (companySelect) {
+        companySelect.innerHTML = '<option value="">Select Company</option>';
+        allCompanies.forEach(c => {
+          companySelect.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+        });
+      }
+      
+    } catch (err) {
+      console.error('Failed to fetch lists:', err);
+      showToast('Failed to load data from server', 'error');
+    }
+  }
+
+  function refreshAllData() {
+    fetchLists();
+    loadRedemptions();
+    showToast('All data refreshed');
+  }
+
+  // ============== MODAL CONTROLS ==============
+
+  function openIssueModal() {
+    safeSetHidden('issueModal', false);
+    safeSetHidden('issueResult', true);
+    generateVoucherCode();
+  }
+  function closeIssueModal() { safeSetHidden('issueModal', true); }
+  
+  function openRedeemModal() {
+    safeSetHidden('redeemModal', false);
+    safeSetHidden('redeemResult', true);
+  }
+  function closeRedeemModal() { safeSetHidden('redeemModal', true); }
+  
+  function openAddUserModal() { safeSetHidden('addUserModal', false); }
+  function closeAddUserModal() { 
+    safeSetHidden('addUserModal', true);
+    safeSetHidden('addUserResult', true);
+  }
+  
+  function openEditUserModal() { safeSetHidden('editUserModal', false); }
+  function closeEditUserModal() { 
+    safeSetHidden('editUserModal', true);
+    safeSetHidden('editUserResult', true);
+  }
+  
+  function openAddMerchantModal() { safeSetHidden('addMerchantModal', false); }
+  function closeAddMerchantModal() { 
+    safeSetHidden('addMerchantModal', true);
+    safeSetHidden('addMerchantResult', true);
+  }
+  
+  function openEditMerchantModal() { safeSetHidden('editMerchantModal', false); }
+  function closeEditMerchantModal() { 
+    safeSetHidden('editMerchantModal', true);
+    safeSetHidden('editMerchantResult', true);
+  }
+  
+  function openAddCompanyModal() { safeSetHidden('addCompanyModal', false); }
+  function closeAddCompanyModal() { 
+    safeSetHidden('addCompanyModal', true);
+    safeSetHidden('addCompanyResult', true);
+  }
+  
+  function openEditCompanyModal() { safeSetHidden('editCompanyModal', false); }
+  function closeEditCompanyModal() { 
+    safeSetHidden('editCompanyModal', true);
+    safeSetHidden('editCompanyResult', true);
+  }
+  
+  function openDeleteModal() { safeSetHidden('deleteConfirmModal', false); }
+  function closeDeleteModal() { 
+    safeSetHidden('deleteConfirmModal', true);
+    itemsToDelete = null;
+  }
+  
+  function openQuickActionsModal() { safeSetHidden('quickActionsModal', false); }
+  function closeQuickActionsModal() { safeSetHidden('quickActionsModal', true); }
+
+  function viewVoucher(id) {
+    const voucher = allVouchers.find(v => v.id === id);
+    if (voucher) {
+      alert(`Voucher Details:\n\nID: ${voucher.id}\nCode: ${voucher.code}\nTitle: ${voucher.title}\nValue: $${voucher.voucher_value}\nStatus: ${voucher.voucher_status}\nExpiry: ${voucher.expiry_date ? new Date(voucher.expiry_date).toLocaleDateString() : 'N/A'}`);
+    }
+  }
+
+  // ============== UTILITY FUNCTIONS ==============
+
+  function showResult(elementId, message, type = 'info') {
+    const element = document.getElementById(elementId);
+    if (!element) return;
+    
+    const color = type === 'error' ? 'red' : type === 'success' ? 'green' : 'blue';
+    element.innerHTML = `<div class="p-3 bg-${color}-50 text-${color}-700 rounded-lg border border-${color}-200">${message}</div>`;
+    element.classList.remove('hidden');
+    
+    setTimeout(() => element.classList.add('hidden'), 5000);
+  }
+
+  function showToast(message, type = 'success') {
+    const toast = document.getElementById('toast');
+    const toastMessage = document.getElementById('toastMessage');
+    
+    if (!toast || !toastMessage) return;
+    
+    toastMessage.textContent = message;
+    toast.classList.remove('bg-green-600', 'bg-red-600', 'hidden');
+    toast.classList.add(type === 'error' ? 'bg-red-600' : 'bg-green-600');
+    toast.classList.remove('translate-x-full', 'hidden');
+    
+    setTimeout(() => {
+      toast.classList.add('translate-x-full');
+      setTimeout(() => toast.classList.add('hidden'), 300);
+    }, 3000);
+  }
+
+  function hideToast() {
+    const toast = document.getElementById('toast');
+    if (toast) {
+      toast.classList.add('translate-x-full', 'hidden');
+    }
+  }
+
+  // ============== EVENT LISTENERS ==============
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // Generate initial voucher code
+    generateVoucherCode();
+    
+    // Set default expiry to 30 days from now
+    const today = new Date();
+    const futureDate = new Date(today.setDate(today.getDate() + 30));
+    const expiryInput = document.getElementById('issueExpiry');
+    if (expiryInput) {
+      expiryInput.value = futureDate.toISOString().split('T')[0];
+    }
+    
+    // Load initial data
+    fetchLists();
+    loadRedemptions();
+    loadVouchers();
+    
+    // Default to dashboard tab
+    switchTab('dashboard');
+    
+    // Add event listeners for search inputs
+    const userSearch = document.getElementById('userSearch');
+    if (userSearch) {
+      userSearch.addEventListener('input', debounce(() => renderUsersTable(), 300));
+    }
+    
+    const merchantSearch = document.getElementById('merchantSearch');
+    if (merchantSearch) {
+      merchantSearch.addEventListener('input', debounce(() => renderMerchantsTable(), 300));
+    }
+    
+    const companySearch = document.getElementById('companySearch');
+    if (companySearch) {
+      companySearch.addEventListener('input', debounce(() => renderCompaniesTable(), 300));
+    }
+    
+    const redemptionSearch = document.getElementById('redemptionSearch');
+    if (redemptionSearch) {
+      redemptionSearch.addEventListener('input', debounce(() => {
+        currentRedemptionPage = 1;
+        renderRedemptionsTable();
+      }, 300));
+    }
+    
+    // Enter key for voucher lookup
+    const redeemCode = document.getElementById('redeemVoucherCode');
+    if (redeemCode) {
+      redeemCode.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') fetchVoucherDetails(this.value);
+      });
+    }
+    
+    // Close modals with ESC key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeIssueModal();
+        closeRedeemModal();
+        closeAddUserModal();
+        closeEditUserModal();
+        closeAddMerchantModal();
+        closeEditMerchantModal();
+        closeAddCompanyModal();
+        closeEditCompanyModal();
+        closeDeleteModal();
+        closeQuickActionsModal();
+      }
+    });
+  });
+
+  // Debounce utility for search inputs
+  function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  }
+</script>
+
+</body>
+</html>

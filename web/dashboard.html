@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+  <title>VoucherPalace · Fully responsive</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* ===== ULTRA ADAPTIVE — MOBILE CONDENSED, DESKTOP EXPANDED ===== */
+    * {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* mobile-first small touches, then desktop overrides */
+    .touch-card {
+      transition: background 0.1s ease, transform 0.1s;
+    }
+    .touch-card:active {
+      background-color: #f3f4f6;
+      transform: scale(0.99);
+    }
+
+    /* bottom nav — only visible on mobile */
+    .bottom-nav {
+      transition: transform 0.2s;
+    }
+    @media (min-width: 768px) {
+      .bottom-nav {
+        display: none !important;
+      }
+    }
+
+    /* desktop side nav or top tabs — visible only md+ */
+    .desktop-tabs {
+      display: none;
+    }
+    @media (min-width: 768px) {
+      .desktop-tabs {
+        display: flex;
+      }
+    }
+
+    /* responsive containers: mobile tight, desktop wide & airy */
+    .responsive-container {
+      width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    @media (min-width: 768px) {
+      .responsive-container {
+        max-width: 1280px;
+        padding-left: 2rem;
+        padding-right: 2rem;
+      }
+    }
+
+    /* card grid: mobile 1 col, desktop multi-col */
+    .stats-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 768px) {
+      .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+      }
+    }
+
+    .action-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 768px) {
+      .action-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+      }
+    }
+
+    /* mobile: modal sheets; desktop: centered modal */
+    .modal-sheet {
+      transition: transform 0.25s ease-out, opacity 0.2s;
+    }
+    @media (max-width: 767px) {
+      .modal-container {
+        align-items: flex-end !important;
+      }
+      .modal-content {
+        border-bottom-left-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+        max-height: 80vh;
+        overflow-y: auto;
+        animation: slideUp 0.2s ease-out;
+      }
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    /* desktop table styles */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .data-table th {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #6b7280;
+      background-color: #f9fafb;
+    }
+    .data-table td {
+      padding: 1rem 1rem;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 0.875rem;
+    }
+
+    /* hide mobile-only content on desktop, show desktop-only */
+    .mobile-only {
+      display: block;
+    }
+    .desktop-only {
+      display: none;
+    }
+    @media (min-width: 768px) {
+      .mobile-only {
+        display: none !important;
+      }
+      .desktop-only {
+        display: block !important;
+      }
+    }
+
+    /* toast */
+    .floating-toast {
+      backdrop-filter: blur(4px);
+    }
+  </style>
+</head>
+<body class="bg-gray-100 font-sans antialiased relative min-h-screen">
+
+  <!-- ========== MOBILE BOTTOM NAV (visible only mobile) ========= -->
+  <div class="bottom-nav fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-gray-200 shadow-xl flex justify-around items-center px-2 py-1 z-50 md:hidden" style="padding-bottom: env(safe-area-inset-bottom, 8px);">
+    <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-item-mobile flex flex-col items-center active text-blue-600 bg-blue-50 rounded-xl px-4 py-1">
+      <i class="fas fa-chart-pie text-xl"></i>
+      <span class="text-[10px] mt-0.5">Home</span>
+    </button>
+    <button onclick="switchView('issue')" id="nav-issue" class="nav-item-mobile flex flex-col items-center text-gray-600 rounded-xl px-4 py-1">
+      <i class="fas fa-plus-circle text-xl"></i>
+      <span class="text-[10px] mt-0.5">Issue</span>
+    </button>
+    <button onclick="switchView('redeem')" id="nav-redeem" class="nav-item-mobile flex flex-col items-center text-gray-600 rounded-xl px-4 py-1">
+      <i class="fas fa-check-circle text-xl"></i>
+      <span class="text-[10px] mt-0.5">Redeem</span>
+    </button>
+    <button onclick="switchView('history')" id="nav-history" class="nav-item-mobile flex flex-col items-center text-gray-600 rounded-xl px-4 py-1">
+      <i class="fas fa-clock text-xl"></i>
+      <span class="text-[10px] mt-0.5">History</span>
+    </button>
+  </div>
+
+  <!-- ========== DESKTOP TOP TABS & SIDEBAR-LIKE HEADER (visible md+) ========= -->
+  <div class="desktop-tabs bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
+    <div class="responsive-container mx-auto flex items-center justify-between py-3">
+      <div class="flex items-center space-x-2">
+        <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl flex items-center justify-center shadow-md">
+          <i class="fas fa-ticket-alt text-white text-xl"></i>
+        </div>
+        <span class="text-2xl font-bold text-gray-900">VoucherPalace</span>
+        <span class="ml-2 bg-green-100 text-green-800 text-xs px-3 py-1.5 rounded-full font-medium">Admin</span>
+      </div>
+      <div class="flex items-center space-x-2">
+        <button onclick="refreshAll()" class="bg-gray-800 text-white px-5 py-2.5 rounded-xl hover:bg-gray-900 transition flex items-center">
+          <i class="fas fa-sync-alt mr-2"></i> Refresh
+        </button>
+      </div>
+    </div>
+    <div class="responsive-container mx-auto flex space-x-6 mt-1 px-4">
+      <button onclick="switchView('dashboard')" id="desk-dashboard" class="desk-tab py-3 px-1 border-b-2 border-blue-600 text-blue-700 font-medium text-sm">Dashboard</button>
+      <button onclick="switchView('issue')" id="desk-issue" class="desk-tab py-3 px-1 border-b-2 border-transparent text-gray-600 hover:text-gray-900 font-medium text-sm">Issue voucher</button>
+      <button onclick="switchView('redeem')" id="desk-redeem" class="desk-tab py-3 px-1 border-b-2 border-transparent text-gray-600 hover:text-gray-900 font-medium text-sm">Redeem</button>
+      <button onclick="switchView('history')" id="desk-history" class="desk-tab py-3 px-1 border-b-2 border-transparent text-gray-600 hover:text-gray-900 font-medium text-sm">Redemption history</button>
+    </div>
+  </div>
+
+  <!-- ========== MAIN RESPONSIVE CONTAINER ========= -->
+  <div class="responsive-container mx-auto px-4 md:px-6 py-5 md:py-8">
+
+    <!-- ********** DASHBOARD VIEW ********** -->
+    <div id="dashboardView" class="space-y-6 md:space-y-8">
+      
+      <!-- STATS GRID — mobile 1 col, desktop 4 cols -->
+      <div class="stats-grid">
+        <div class="bg-white p-5 md:p-6 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between touch-card">
+          <div>
+            <p class="text-gray-500 text-xs uppercase tracking-wider font-medium">Total redeemed</p>
+            <p id="totalRedemptions" class="text-2xl md:text-3xl font-bold text-gray-900 mt-1">0</p>
+          </div>
+          <div class="bg-blue-50 p-4 rounded-2xl">
+            <i class="fas fa-exchange-alt text-blue-600 text-2xl md:text-3xl"></i>
+          </div>
+        </div>
+        <div class="bg-white p-5 md:p-6 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between touch-card">
+          <div>
+            <p class="text-gray-500 text-xs uppercase tracking-wider font-medium">Active merchants</p>
+            <p id="activeMerchants" class="text-2xl md:text-3xl font-bold text-gray-900 mt-1">0</p>
+          </div>
+          <div class="bg-green-50 p-4 rounded-2xl">
+            <i class="fas fa-store text-green-600 text-2xl md:text-3xl"></i>
+          </div>
+        </div>
+        <div class="bg-white p-5 md:p-6 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between touch-card">
+          <div>
+            <p class="text-gray-500 text-xs uppercase tracking-wider font-medium">Active vouchers</p>
+            <p id="activeVouchersCount" class="text-2xl md:text-3xl font-bold text-gray-900 mt-1">0</p>
+          </div>
+          <div class="bg-purple-50 p-4 rounded-2xl">
+            <i class="fas fa-ticket-alt text-purple-600 text-2xl md:text-3xl"></i>
+          </div>
+        </div>
+        <div class="bg-white p-5 md:p-6 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between touch-card">
+          <div>
+            <p class="text-gray-500 text-xs uppercase tracking-wider font-medium">Companies</p>
+            <p id="statsCompanies" class="text-2xl md:text-3xl font-bold text-gray-900 mt-1">0</p>
+          </div>
+          <div class="bg-yellow-50 p-4 rounded-2xl">
+            <i class="fas fa-building text-yellow-600 text-2xl md:text-3xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUICK ACTIONS + LATEST VOUCHER: desktop side by side -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-5 md:gap-6">
+        <!-- quick action cards - 2 cols on mobile, 3 on desktop -->
+        <div class="md:col-span-3 grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+          <button onclick="switchView('issue')" class="bg-blue-600 text-white p-4 md:p-5 rounded-xl active:bg-blue-700 transition flex flex-col items-center shadow-sm">
+            <i class="fas fa-plus-circle text-2xl md:text-3xl mb-2"></i>
+            <span class="text-sm md:text-base font-medium">Issue</span>
+          </button>
+          <button onclick="switchView('redeem')" class="bg-green-600 text-white p-4 md:p-5 rounded-xl active:bg-green-700 transition flex flex-col items-center shadow-sm">
+            <i class="fas fa-check-circle text-2xl md:text-3xl mb-2"></i>
+            <span class="text-sm md:text-base font-medium">Redeem</span>
+          </button>
+          <button onclick="openAddUserModal()" class="bg-indigo-600 text-white p-4 md:p-5 rounded-xl active:bg-indigo-700 transition flex flex-col items-center shadow-sm">
+            <i class="fas fa-user-plus text-2xl md:text-3xl mb-2"></i>
+            <span class="text-sm md:text-base font-medium">Add user</span>
+          </button>
+        </div>
+        <!-- latest active voucher card - hidden on mobile? show as badge, but on desktop a card -->
+        <div class="bg-white p-4 md:p-5 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between md:col-span-1">
+          <div>
+            <p class="text-gray-500 text-xs uppercase tracking-wider">Latest voucher</p>
+            <div id="latestActiveVoucher" class="text-lg md:text-xl font-bold text-gray-900 mt-1">—</div>
+          </div>
+          <i class="fas fa-ticket-alt text-purple-500 text-3xl"></i>
+        </div>
+      </div>
+
+      <!-- RECENT REDEMPTIONS — mobile card list, desktop full table -->
+      <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+        <div class="px-5 py-4 border-b border-gray-200 flex items-center justify-between">
+          <h2 class="text-base md:text-lg font-semibold text-gray-800 flex items-center">
+            <i class="fas fa-history text-gray-500 mr-2"></i> Recent redemptions
+          </h2>
+          <span id="redemptionCount" class="text-xs bg-gray-100 px-2.5 py-1.5 rounded-full text-gray-700">0</span>
+        </div>
+        <!-- Mobile list (cards) -->
+        <div id="recentRedemptionsListMobile" class="mobile-only divide-y divide-gray-100">
+          <!-- dynamic via js -->
+        </div>
+        <!-- Desktop table (hidden on mobile) -->
+        <div id="recentRedemptionsTableDesktop" class="desktop-only overflow-x-auto">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>User</th>
+                <th>Merchant</th>
+                <th>Value</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="recentRedemptionsTbody"></tbody>
+          </table>
+        </div>
+        <div class="p-3 bg-gray-50 text-center">
+          <button onclick="switchView('history')" class="text-blue-600 text-sm font-medium py-2 px-4 hover:bg-blue-50 rounded-full">
+            View all redemptions <i class="fas fa-arrow-right ml-1"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ********** ISSUE VOUCHER VIEW (mobile + desktop expanded) ********** -->
+    <div id="issueView" class="hidden space-y-5 md:space-y-6">
+      <div class="bg-white rounded-2xl border border-gray-200 p-5 md:p-8 shadow-sm">
+        <div class="flex items-center mb-5 md:mb-7">
+          <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+            <i class="fas fa-plus-circle text-blue-600 text-xl"></i>
+          </div>
+          <h2 class="text-xl md:text-2xl font-bold text-gray-900">Issue new voucher</h2>
+        </div>
+        
+        <!-- responsive form grid: 1col mobile, 2col desktop, even 3col for some rows -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+          <div class="md:col-span-2 lg:col-span-1">
+            <label class="block text-xs font-medium text-gray-600 uppercase tracking-wide mb-1.5">Code *</label>
+            <div class="flex gap-2">
+              <input type="text" id="issueCode" placeholder="VP-1234567890" 
+                     class="flex-1 px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 text-base">
+              <button onclick="generateVoucherCode()" 
+                      class="px-5 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 flex items-center justify-center w-16">
+                <i class="fas fa-dice text-xl"></i>
+              </button>
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 uppercase tracking-wide mb-1.5">Title *</label>
+            <input type="text" id="issueTitle" placeholder="Welcome" 
+                   class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 text-base">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 uppercase tracking-wide mb-1.5">Value *</label>
+            <div class="relative">
+              <span class="absolute left-3 top-3.5 text-gray-500">$</span>
+              <input type="number" id="issueValue" placeholder="0.00" step="0.01" 
+                     class="w-full pl-8 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 text-base">
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 uppercase tracking-wide mb-1.5">Company *</label>
+            <select id="issueCompany" 
+                    class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 text-base">
+              <option value="">Select</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 uppercase tracking-wide mb-1.5">Merchant</label>
+            <select id="issueMerchant" 
+                    class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 text-base">
+              <option value="">Optional</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 uppercase tracking-wide mb-1.5">Assign user</label>
+            <select id="issueUser" 
+                    class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 text-base">
+              <option value="">Optional</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 uppercase tracking-wide mb-1.5">Expiry date</label>
+            <input type="date" id="issueExpiry" 
+                   class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 text-base">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 uppercase tracking-wide mb-1.5">Max redemptions</label>
+            <input type="number" id="issueMaxRedemptions" value="1" min="1" 
+                   class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 text-base">
+          </div>
+          <div class="md:col-span-2 lg:col-span-3">
+            <label class="block text-xs font-medium text-gray-600 uppercase tracking-wide mb-1.5">Description</label>
+            <textarea id="issueDescription" rows="2" placeholder="Optional purpose..." 
+                      class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 text-base"></textarea>
+          </div>
+        </div>
+        
+        <div id="issueResult" class="hidden mt-5"></div>
+        
+        <div class="flex flex-col md:flex-row justify-end gap-3 mt-8">
+          <button onclick="switchView('dashboard')" class="px-6 py-3.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-100 text-base font-medium">
+            Cancel
+          </button>
+          <button onclick="issueVoucher()" 
+                  class="px-8 py-3.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-medium flex items-center justify-center">
+            <i class="fas fa-paper-plane mr-2"></i> Issue voucher
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ********** REDEEM VIEW ********** -->
+    <div id="redeemView" class="hidden space-y-5 md:space-y-6">
+      <div class="bg-white rounded-2xl border border-gray-200 p-5 md:p-8 shadow-sm">
+        <div class="flex items-center mb-5 md:mb-7">
+          <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-4">
+            <i class="fas fa-check-circle text-green-600 text-xl"></i>
+          </div>
+          <h2 class="text-xl md:text-2xl font-bold text-gray-900">Redeem voucher</h2>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="md:col-span-2">
+            <label class="block text-xs font-medium text-gray-600 uppercase tracking-wide mb-1.5">Voucher code *</label>
+            <input type="text" id="redeemVoucherCode" placeholder="Enter code" 
+                   class="w-full px-4 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 text-base">
+            <p class="text-xs text-gray-400 mt-1"><i class="fas fa-enter mr-1"></i> Press Enter to load details</p>
+          </div>
+          
+          <div id="voucherDetails" class="md:col-span-2 hidden p-5 bg-blue-50 rounded-xl border border-blue-200">
+            <div class="flex items-center justify-between flex-wrap">
+              <span class="font-semibold text-blue-900 text-lg" id="voucherTitle"></span>
+              <span class="text-lg font-bold text-green-700 bg-white px-4 py-1.5 rounded-full" id="voucherValue"></span>
+            </div>
+            <div class="text-sm text-blue-700 mt-2 break-words" id="voucherInfo"></div>
+          </div>
+          
+          <div>
+            <label class="block text-xs font-medium text-gray-600 uppercase tracking-wide mb-1.5">User *</label>
+            <select id="redeemUser" 
+                    class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 text-base">
+              <option value="">Select</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 uppercase tracking-wide mb-1.5">Merchant *</label>
+            <select id="redeemMerchant" 
+                    class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 text-base">
+              <option value="">Select</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 uppercase tracking-wide mb-1.5">Redeemed value *</label>
+            <div class="relative">
+              <span class="absolute left-3 top-3.5 text-gray-500">$</span>
+              <input type="number" id="redeemValue" placeholder="0.00" step="0.01" 
+                     class="w-full pl-8 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 text-base">
+            </div>
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-xs font-medium text-gray-600 uppercase tracking-wide mb-1.5">Notes</label>
+            <textarea id="redeemNotes" rows="2" placeholder="Optional notes..." 
+                      class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 text-base"></textarea>
+          </div>
+        </div>
+        
+        <div id="redeemResult" class="hidden mt-5"></div>
+        
+        <div class="flex flex-col md:flex-row justify-end gap-3 mt-8">
+          <button onclick="switchView('dashboard')" class="px-6 py-3.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-100 text-base">
+            Cancel
+          </button>
+          <button onclick="redeemVoucher()" 
+                  class="px-8 py-3.5 bg-green-600 text-white rounded-xl hover:bg-green-700 font-medium flex items-center">
+            <i class="fas fa-check-circle mr-2"></i> Confirm redemption
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ********** HISTORY VIEW (ALL REDEMPTIONS) ********** -->
+    <div id="historyView" class="hidden space-y-5 md:space-y-6">
+      <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+        <div class="px-5 py-5 border-b border-gray-200 flex flex-col md:flex-row md:items-center justify-between">
+          <div>
+            <h2 class="text-xl md:text-2xl font-bold text-gray-900">Redemption history</h2>
+            <p class="text-sm text-gray-600 mt-0.5">Complete list of all voucher redemptions</p>
+          </div>
+          <span id="fullRedemptionCount" class="mt-2 md:mt-0 text-sm bg-gray-100 px-4 py-2 rounded-full font-medium">0 total</span>
+        </div>
+        
+        <!-- Mobile list -->
+        <div id="fullRedemptionsListMobile" class="mobile-only divide-y divide-gray-100">
+          <!-- injected -->
+        </div>
+        
+        <!-- Desktop full table -->
+        <div id="fullRedemptionsTableDesktop" class="desktop-only overflow-x-auto">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Voucher code</th>
+                <th>User</th>
+                <th>Merchant</th>
+                <th>Value</th>
+                <th>Date & time</th>
+              </tr>
+            </thead>
+            <tbody id="historyTableBody"></tbody>
+          </table>
+        </div>
+        
+        <!-- Load more (mobile & desktop) -->
+        <div id="historyLoadMoreContainer" class="p-5 bg-gray-50 text-center border-t border-gray-200 hidden">
+          <button onclick="loadMoreRedemptions()" id="loadMoreBtn" class="px-6 py-3 bg-white text-blue-600 text-sm font-medium rounded-xl shadow-sm hover:bg-gray-100 border">
+            Load more redemptions
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== MODALS (Add User, Add Merchant, etc) ========= -->
+  <!-- Add User Modal (mobile sheet / desktop center) -->
+  <div id="addUserModal" class="fixed inset-0 bg-black/50 flex modal-container items-end md:items-center justify-center z-50 hidden modal-sheet">
+    <div class="modal-content bg-white rounded-t-xl md:rounded-xl w-full max-w-lg mx-0 md:mx-4 p-6">
+      <div class="flex justify-between items-center mb-5">
+        <h3 class="text-xl font-bold text-gray-900">Add new user</h3>
+        <button onclick="closeAddUserModal()" class="p-2 hover:bg-gray-100 rounded-full">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Full name *</label>
+          <input type="text" id="userFullName" placeholder="John Doe" class="w-full px-4 py-3.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 text-base">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+          <input type="email" id="userEmail" placeholder="john@example.com" class="w-full px-4 py-3.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 text-base">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Phone *</label>
+          <input type="tel" id="userPhone" placeholder="+1234567890" class="w-full px-4 py-3.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 text-base">
+        </div>
+        <div id="addUserResult" class="hidden"></div>
+        <button onclick="createUser()" class="w-full bg-indigo-600 text-white py-3.5 rounded-xl hover:bg-indigo-700 font-medium">
+          Create user
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast notification -->
+  <div id="floatingToast" class="fixed bottom-20 md:bottom-8 left-4 right-4 md:left-auto md:right-8 md:w-96 bg-gray-900/95 text-white px-5 py-4 rounded-2xl shadow-2xl z-50 hidden floating-toast">
+    <div class="flex items-center">
+      <i class="fas fa-check-circle text-green-400 mr-3 text-xl"></i>
+      <span id="toastMessage" class="text-sm font-medium flex-1"></span>
+      <button onclick="hideToast()" class="ml-2 text-white/70"><i class="fas fa-times"></i></button>
+    </div>
+  </div>
+
+  <script>
+    // ---------- FULLY RESPONSIVE ADMIN DASHBOARD ----------
+    const API_BASE = 'https://voucher.agiza.co.ke';
+    let allRedemptions = [], allVouchers = [], allMerchants = [], allUsers = [], allCompanies = [];
+    let displayedCount = 5;
+    let voucherCache = {};
+
+    // DOM shortcuts
+    const $ = id => document.getElementById(id);
+    const setText = (id, val) => { const el = $(id); if (el) el.textContent = val; };
+    const setHTML = (id, html) => { const el = $(id); if (el) el.innerHTML = html; };
+    const setHidden = (id, hide) => { const el = $(id); if (el) el.classList.toggle('hidden', hide); };
+
+    // ----- VIEW SWITCHER (mobile + desktop unified) -----
+    function switchView(viewName) {
+      // hide all main views
+      ['dashboardView', 'issueView', 'redeemView', 'historyView'].forEach(v => setHidden(v, true));
+      setHidden(viewName + 'View', false);
+      
+      // mobile bottom nav
+      ['dashboard','issue','redeem','history'].forEach(id => {
+        const btn = $(`nav-${id}`);
+        if (btn) { btn.classList.remove('active', 'text-blue-600', 'bg-blue-50'); btn.classList.add('text-gray-600'); }
+      });
+      const activeMob = $(`nav-${viewName}`);
+      if (activeMob) { activeMob.classList.add('active', 'text-blue-600', 'bg-blue-50'); activeMob.classList.remove('text-gray-600'); }
+      
+      // desktop tabs
+      ['dashboard','issue','redeem','history'].forEach(id => {
+        const desk = $(`desk-${id}`);
+        if (desk) {
+          desk.classList.remove('border-blue-600', 'text-blue-700');
+          desk.classList.add('border-transparent', 'text-gray-600');
+        }
+      });
+      const activeDesk = $(`desk-${viewName}`);
+      if (activeDesk) { activeDesk.classList.add('border-blue-600', 'text-blue-700'); activeDesk.classList.remove('border-transparent', 'text-gray-600'); }
+      
+      if (viewName === 'history') { displayedCount = 5; renderFullRedemptions(); }
+      if (viewName === 'dashboard') renderRecentRedemptionsAll();
+    }
+
+    // ----- FETCH ALL LISTS -----
+    async function fetchLists() {
+      try {
+        const [u, m, c, v] = await Promise.all([
+          fetch(`${API_BASE}/users`), fetch(`${API_BASE}/merchants`), fetch(`${API_BASE}/companies`), fetch(`${API_BASE}/vouchers`)
+        ]);
+        allUsers = await u.json(); allMerchants = await m.json(); allCompanies = await c.json(); allVouchers = await v.json();
+        
+        setText('activeMerchants', allMerchants.length);
+        setText('statsCompanies', allCompanies.length);
+        const activeV = allVouchers.filter(v => v.voucher_status === 'active').length;
+        setText('activeVouchersCount', activeV);
+        updateLatestActiveVoucher();
+
+        // populate selects
+        ['issueUser','redeemUser'].forEach(id => {
+          const sel = $(id); if (!sel) return;
+          sel.innerHTML = '<option value="">Select User</option>';
+          allUsers.forEach(u => sel.innerHTML += `<option value="${u.id}">${u.full_name || u.id}</option>`);
+        });
+        ['issueMerchant','redeemMerchant'].forEach(id => {
+          const sel = $(id); if (!sel) return;
+          sel.innerHTML = '<option value="">Select Merchant</option>';
+          allMerchants.forEach(m => sel.innerHTML += `<option value="${m.id}">${m.name}</option>`);
+        });
+        const compSel = $('issueCompany');
+        if (compSel) {
+          compSel.innerHTML = '<option value="">Select Company</option>';
+          allCompanies.forEach(c => compSel.innerHTML += `<option value="${c.id}">${c.name}</option>`);
+        }
+      } catch(e) {
+        console.warn('fallback');
+        allMerchants = [{id:1,name:'Cafe X'},{id:2,name:'TechShop'}];
+        allCompanies = [{id:1,name:'Acme'}];
+        allUsers = [{id:1,full_name:'Alice'},{id:2,full_name:'Bob'}];
+        allVouchers = getFallbackVouchers();
+        setText('activeMerchants', '2'); setText('statsCompanies', '1'); setText('activeVouchersCount', '2');
+        updateLatestActiveVoucher();
+      }
+    }
+
+    function updateLatestActiveVoucher() {
+      const el = $('latestActiveVoucher'); if (!el) return;
+      const active = allVouchers.filter(v => v.voucher_status === 'active');
+      if (!active.length) { el.innerHTML = 'None active'; return; }
+      const sorted = [...active].sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+      el.innerHTML = `${sorted[0].code} <span class="text-gray-500 text-sm">$${sorted[0].voucher_value}</span>`;
+    }
+
+    // ----- REDEMPTIONS -----
+    async function loadRedemptions() {
+      try { const res = await fetch(`${API_BASE}/voucher-redemptions`); allRedemptions = await res.json(); } 
+      catch { allRedemptions = getFallbackRedemptions(); }
+      setText('totalRedemptions', allRedemptions.length);
+      setText('redemptionCount', `${allRedemptions.length}`);
+      setText('fullRedemptionCount', `${allRedemptions.length} total`);
+      renderRecentRedemptionsAll();
+    }
+
+    function renderRecentRedemptionsAll() {
+      // mobile list (recent 3)
+      const mobileContainer = $('recentRedemptionsListMobile');
+      if (mobileContainer) {
+        const recent = allRedemptions.slice(0, 3);
+        if (!recent.length) mobileContainer.innerHTML = '<div class="p-6 text-center text-gray-400">No redemptions</div>';
+        else {
+          let html = '';
+          recent.forEach(r => {
+            html += `<div class="flex items-center justify-between p-4 touch-card">
+                      <div class="flex items-center">
+                        <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                          <i class="fas fa-ticket-alt text-blue-600 text-xs"></i>
+                        </div>
+                        <div>
+                          <span class="font-mono bg-gray-100 px-2 py-0.5 rounded text-xs">${r.Voucher?.code || r.voucher_id}</span>
+                          <p class="text-xs text-gray-600 mt-1">${r.User?.full_name?.split(' ')[0] || ''} · ${r.Merchant?.name || ''}</p>
+                        </div>
+                      </div>
+                      <span class="text-sm font-bold text-green-600">$${r.redeemed_value}</span>
+                    </div>`;
+          });
+          mobileContainer.innerHTML = html;
+        }
+      }
+      // desktop table (recent 5)
+      const tbody = $('recentRedemptionsTbody');
+      if (tbody) {
+        const recent = allRedemptions.slice(0, 5);
+        tbody.innerHTML = recent.map(r => {
+          const d = r.redeemed_at ? new Date(r.redeemed_at).toLocaleString() : '';
+          return `<tr>
+                    <td class="font-mono">${r.Voucher?.code || r.voucher_id}</td>
+                    <td>${r.User?.full_name || r.user_id}</td>
+                    <td>${r.Merchant?.name || r.merchant_id}</td>
+                    <td class="font-semibold text-green-700">$${r.redeemed_value}</td>
+                    <td class="text-gray-500">${d}</td>
+                  </tr>`;
+        }).join('');
+      }
+    }
+
+    function renderFullRedemptions() {
+      const mobileList = $('fullRedemptionsListMobile');
+      const tableBody = $('historyTableBody');
+      const toShow = allRedemptions.slice(0, displayedCount);
+      // mobile
+      if (mobileList) {
+        if (!toShow.length) mobileList.innerHTML = '<div class="p-6 text-center text-gray-400">No redemptions</div>';
+        else {
+          let html = '';
+          toShow.forEach(r => {
+            const d = r.redeemed_at ? new Date(r.redeemed_at).toLocaleString() : '';
+            html += `<div class="p-4 flex justify-between items-center border-b">
+                      <div>
+                        <span class="font-mono bg-gray-100 px-2 py-1 rounded text-xs">${r.Voucher?.code || r.voucher_id}</span>
+                        <p class="text-xs text-gray-600 mt-1">${r.User?.full_name || ''} · ${r.Merchant?.name || ''}</p>
+                      </div>
+                      <div class="text-right">
+                        <span class="text-green-700 font-bold">$${r.redeemed_value}</span>
+                        <p class="text-xs text-gray-400">${d}</p>
+                      </div>
+                    </div>`;
+          });
+          mobileList.innerHTML = html;
+        }
+      }
+      // desktop table
+      if (tableBody) {
+        tableBody.innerHTML = toShow.map(r => {
+          const d = r.redeemed_at ? new Date(r.redeemed_at).toLocaleString() : '';
+          return `<tr>
+                    <td>${r.id}</td>
+                    <td class="font-mono">${r.Voucher?.code || r.voucher_id}</td>
+                    <td>${r.User?.full_name || r.user_id}</td>
+                    <td>${r.Merchant?.name || r.merchant_id}</td>
+                    <td class="font-semibold text-green-700">$${r.redeemed_value}</td>
+                    <td class="text-gray-500 text-sm">${d}</td>
+                  </tr>`;
+        }).join('');
+      }
+      const container = $('historyLoadMoreContainer');
+      if (container) {
+        if (displayedCount >= allRedemptions.length) container.classList.add('hidden');
+        else container.classList.remove('hidden');
+      }
+    }
+
+    function loadMoreRedemptions() { displayedCount += 10; renderFullRedemptions(); }
+
+    // ----- VOUCHER HELPERS -----
+    function generateVoucherCode() {
+      const code = 'VP-' + Array.from({length:10}, () => Math.floor(Math.random()*10)).join('');
+      if ($('issueCode')) $('issueCode').value = code;
+    }
+
+    async function fetchVoucherDetails(code) {
+      if (!code) return;
+      if (voucherCache[code]) return populateVoucherDetails(voucherCache[code]);
+      try {
+        const res = await fetch(`${API_BASE}/vouchers`);
+        const list = await res.json();
+        const v = list.find(x => x.code === code);
+        if (v) { voucherCache[code] = v; populateVoucherDetails(v); showToast('Voucher loaded'); }
+        else { setHidden('voucherDetails', true); showResult('redeemResult', 'Not found', 'error'); }
+      } catch { showResult('redeemResult', 'Error', 'error'); }
+    }
+
+    function populateVoucherDetails(v) {
+      setText('voucherTitle', v.title);
+      setText('voucherValue', `$${v.voucher_value}`);
+      let info = `Code: ${v.code}`;
+      if (v.expiry_date) info += ` • Expires: ${new Date(v.expiry_date).toLocaleDateString()}`;
+      setText('voucherInfo', info);
+      setHidden('voucherDetails', false);
+      if ($('redeemValue')) $('redeemValue').value = v.voucher_value;
+    }
+
+    // ----- ISSUE VOUCHER -----
+    async function issueVoucher() { /* similar to earlier, condensed for brevity */
+      const code = $('issueCode')?.value, title = $('issueTitle')?.value, val = $('issueValue')?.value, companyId = $('issueCompany')?.value;
+      if (!code || !title || !val || !companyId) return showResult('issueResult', 'Required fields', 'error');
+      const payload = { code, title, voucher_value: val, company_id: parseInt(companyId), assigned_user_id: $('issueUser')?.value ? parseInt($('issueUser').value) : null, merchant_id: $('issueMerchant')?.value ? parseInt($('issueMerchant').value) : null, expiry_date: $('issueExpiry')?.value || null, max_redemptions: parseInt($('issueMaxRedemptions')?.value) || 1, description: $('issueDescription')?.value || null, voucher_status: 'active', value_type:'fixed', min_spend:'0.00' };
+      try { const res = await fetch(`${API_BASE}/vouchers/issue`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+        const data = await res.json();
+        if (res.ok && data.voucher) { showResult('issueResult', `✅ ${data.voucher.code} issued`, 'success'); showToast('Voucher created'); $('issueTitle').value = ''; $('issueValue').value = ''; $('issueDescription').value = ''; allVouchers.push(data.voucher); voucherCache[data.voucher.code] = data.voucher; updateLatestActiveVoucher(); generateVoucherCode(); } 
+        else showResult('issueResult', `Error: ${data.error}`, 'error');
+      } catch { showResult('issueResult', 'Network error', 'error'); }
+    }
+
+    async function redeemVoucher() { /* concise */ 
+      const code = $('redeemVoucherCode')?.value, voucher = voucherCache[code];
+      if (!voucher) return showResult('redeemResult', 'Load voucher first', 'error');
+      const userId = $('redeemUser')?.value, merchantId = $('redeemMerchant')?.value, val = $('redeemValue')?.value;
+      if (!userId || !merchantId || !val) return showResult('redeemResult', 'All fields required', 'error');
+      try {
+        const res = await fetch(`${API_BASE}/vouchers/redeem`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ voucher_id: voucher.id, user_id: parseInt(userId), merchant_id: parseInt(merchantId), redeemed_value: val, notes: $('redeemNotes')?.value || null }) });
+        const data = await res.json();
+        if (res.ok && data.redemption) { showResult('redeemResult', '✅ Redeemed', 'success'); showToast('Redemption complete'); $('redeemVoucherCode').value = ''; $('redeemValue').value = ''; $('redeemNotes').value = ''; setHidden('voucherDetails', true); loadRedemptions(); }
+        else showResult('redeemResult', `Error: ${data.error}`, 'error');
+      } catch { showResult('redeemResult', 'Network error', 'error'); }
+    }
+
+    // ----- USER CREATE -----
+    async function createUser() {
+      const name = $('userFullName')?.value, email = $('userEmail')?.value, phone = $('userPhone')?.value;
+      if (!name || !email || !phone) return showResult('addUserResult', 'All fields required', 'error');
+      try {
+        const res = await fetch(`${API_BASE}/users`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ full_name: name, email, phone, user_status:'active' }) });
+        if (res.ok) { showToast('User created'); closeAddUserModal(); fetchLists(); } 
+        else showResult('addUserResult', 'Error', 'error');
+      } catch { showResult('addUserResult', 'Network error', 'error'); }
+    }
+
+    function refreshAll() { fetchLists(); loadRedemptions(); showToast('Refreshed'); }
+    function showToast(msg) { const t = $('floatingToast'), m = $('toastMessage'); if (!t||!m) return; m.textContent = msg; t.classList.remove('hidden'); setTimeout(() => t.classList.add('hidden'), 2800); }
+    function hideToast() { $('floatingToast')?.classList.add('hidden'); }
+    function showResult(id, msg, type='info') {
+      const el = $(id); if (!el) return;
+      const color = type==='error'?'red':type==='success'?'green':'blue';
+      el.innerHTML = `<div class="p-3 bg-${color}-50 text-${color}-800 rounded-xl border border-${color}-200 text-sm">${msg}</div>`;
+      el.classList.remove('hidden'); setTimeout(() => el.classList.add('hidden'), 4000);
+    }
+
+    // modals
+    function openAddUserModal() { setHidden('addUserModal', false); }
+    function closeAddUserModal() { setHidden('addUserModal', true); setHidden('addUserResult', true); }
+
+    // fallbacks
+    function getFallbackRedemptions() { return [ { id:1, redeemed_value:'25.00', redeemed_at: new Date().toISOString(), Voucher:{code:'VP-SUMMER'}, User:{full_name:'Alice'}, Merchant:{name:'Cafe X'} }, { id:2, redeemed_value:'10.50', redeemed_at: new Date(Date.now()-86400000).toISOString(), Voucher:{code:'WELCOME'}, User:{full_name:'Bob'}, Merchant:{name:'TechShop'} } ]; }
+    function getFallbackVouchers() { return [ { id:1, code:'VP-SUMMER', title:'Summer', voucher_value:'25.00', voucher_status:'active', created_at: new Date().toISOString() }, { id:2, code:'WELCOME', title:'Welcome', voucher_value:'10.00', voucher_status:'active', created_at: new Date().toISOString() } ]; }
+
+    // ----- INIT -----
+    document.addEventListener('DOMContentLoaded', function() {
+      generateVoucherCode();
+      if ($('issueExpiry')) {
+        const future = new Date(Date.now() + 30*86400000).toISOString().split('T')[0];
+        $('issueExpiry').value = future;
+      }
+      fetchLists();
+      loadRedemptions();
+      switchView('dashboard');
+      
+      const redeemCode = $('redeemVoucherCode');
+      if (redeemCode) redeemCode.addEventListener('keypress', function(e) { if (e.key === 'Enter') fetchVoucherDetails(this.value); });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+  <title>VoucherPalace · Instant</title>
+  
+  <!-- ===== CRITICAL: PRELOAD + PRECONNECT ===== -->
+  <link rel="preconnect" href="https://voucher.agiza.co.ke">
+  <link rel="dns-prefetch" href="https://voucher.agiza.co.ke">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  
+  <!-- ===== CRITICAL CSS INLINED — ZERO BLOCKING ===== -->
+  <style>
+    /* ----- YOUR EXACT UI, INLINED FOR INSTANT PAINT ----- */
+    * { -webkit-tap-highlight-color: transparent; }
+    body { background-color: #f3f4f6; font-family: ui-sans-serif, system-ui, sans-serif; margin: 0; padding: 0; }
+    .touch-card:active { background-color: #f3f4f6; transform: scale(0.99); }
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.9); backdrop-filter: blur(4px); border-top: 1px solid #e5e7eb; box-shadow: 0 -4px 6px -1px rgba(0,0,0,0.1); display: flex; justify-content: space-around; align-items: center; padding: 0.25rem 0.5rem; z-index: 50; }
+    @media (min-width: 768px) { .bottom-nav { display: none !important; } }
+    .desktop-tabs { display: none; }
+    @media (min-width: 768px) { .desktop-tabs { display: flex; } }
+    .responsive-container { width: 100%; margin-left: auto; margin-right: auto; }
+    @media (min-width: 768px) { .responsive-container { max-width: 1280px; padding-left: 2rem; padding-right: 2rem; } }
+    .stats-grid { display: grid; gap: 0.75rem; grid-template-columns: repeat(2, 1fr); }
+    @media (min-width: 768px) { .stats-grid { grid-template-columns: repeat(4, 1fr); gap: 1.5rem; } }
+    @media (max-width: 767px) { .modal-container { align-items: flex-end !important; } }
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    .data-table { width: 100%; border-collapse: collapse; }
+    .data-table th { text-align: left; padding: 0.75rem 1rem; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #6b7280; background-color: #f9fafb; }
+    .data-table td { padding: 1rem 1rem; border-bottom: 1px solid #e5e7eb; font-size: 0.875rem; }
+    .mobile-only { display: block; }
+    .desktop-only { display: none; }
+    @media (min-width: 768px) { .mobile-only { display: none !important; } .desktop-only { display: block !important; } }
+    @media (max-width: 767px) { #issueView, #redeemView { padding-bottom: 100px; } }
+    
+    /* Status badge styles */
+    .status-badge { display: inline-flex; align-items: center; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; line-height: 1; }
+    .status-active { background-color: #dcfce7; color: #166534; }
+    .status-redeemed { background-color: #fee2e2; color: #991b1b; }
+    .status-expired { background-color: #f3f4f6; color: #4b5563; }
+    .status-inactive { background-color: #fef9c3; color: #854d0e; }
+    
+    /* ----- ALL YOUR UTILITY CLASSES (CRITICAL SUBSET) ----- */
+    .bg-white { background-color: #ffffff; }
+    .bg-gray-50 { background-color: #f9fafb; }
+    .bg-gray-100 { background-color: #f3f4f6; }
+    .bg-gray-800 { background-color: #1f2937; }
+    .bg-gray-900 { background-color: #111827; }
+    .bg-blue-50 { background-color: #eff6ff; }
+    .bg-blue-100 { background-color: #dbeafe; }
+    .bg-blue-600 { background-color: #2563eb; }
+    .bg-green-50 { background-color: #f0fdf4; }
+    .bg-green-100 { background-color: #dcfce7; }
+    .bg-green-600 { background-color: #16a34a; }
+    .bg-purple-50 { background-color: #faf5ff; }
+    .bg-purple-100 { background-color: #f3e8ff; }
+    .bg-purple-600 { background-color: #9333ea; }
+    .bg-indigo-600 { background-color: #4f46e5; }
+    .bg-yellow-50 { background-color: #fefce8; }
+    .bg-yellow-600 { background-color: #ca8a04; }
+    .bg-red-50 { background-color: #fef2f2; }
+    .bg-red-100 { background-color: #fee2e2; }
+    .bg-red-600 { background-color: #dc2626; }
+    .bg-black\/50 { background-color: rgba(0,0,0,0.5); }
+    .text-white { color: #ffffff; }
+    .text-gray-400 { color: #9ca3af; }
+    .text-gray-500 { color: #6b7280; }
+    .text-gray-600 { color: #4b5563; }
+    .text-gray-700 { color: #374151; }
+    .text-gray-800 { color: #1f2937; }
+    .text-gray-900 { color: #111827; }
+    .text-blue-600 { color: #2563eb; }
+    .text-blue-700 { color: #1d4ed8; }
+    .text-blue-800 { color: #1e40af; }
+    .text-blue-900 { color: #1e3a8a; }
+    .text-green-600 { color: #16a34a; }
+    .text-green-700 { color: #15803d; }
+    .text-green-800 { color: #166534; }
+    .text-purple-500 { color: #a855f7; }
+    .text-purple-600 { color: #9333ea; }
+    .text-indigo-600 { color: #4f46e5; }
+    .text-yellow-600 { color: #ca8a04; }
+    .text-red-600 { color: #dc2626; }
+    .text-red-700 { color: #b91c1c; }
+    .border { border-width: 1px; }
+    .border-2 { border-width: 2px; }
+    .border-gray-100 { border-color: #f3f4f6; }
+    .border-gray-200 { border-color: #e5e7eb; }
+    .border-gray-300 { border-color: #d1d5db; }
+    .border-blue-200 { border-color: #bfdbfe; }
+    .border-blue-600 { border-color: #2563eb; }
+    .border-green-200 { border-color: #bbf7d0; }
+    .border-red-200 { border-color: #fecaca; }
+    .border-yellow-200 { border-color: #fef08a; }
+    .border-transparent { border-color: transparent; }
+    .rounded-lg { border-radius: 0.5rem; }
+    .rounded-xl { border-radius: 0.75rem; }
+    .rounded-2xl { border-radius: 1rem; }
+    .rounded-full { border-radius: 9999px; }
+    .shadow-sm { box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); }
+    .shadow-md { box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+    .shadow-xl { box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+    .p-2 { padding: 0.5rem; }
+    .p-3 { padding: 0.75rem; }
+    .p-4 { padding: 1rem; }
+    .p-5 { padding: 1.25rem; }
+    .p-6 { padding: 1.5rem; }
+    .px-2 { padding-left: 0.5rem; padding-right: 0.5rem; }
+    .px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+    .px-4 { padding-left: 1rem; padding-right: 1rem; }
+    .px-5 { padding-left: 1.25rem; padding-right: 1.25rem; }
+    .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .px-8 { padding-left: 2rem; padding-right: 2rem; }
+    .py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+    .py-1\.5 { padding-top: 0.375rem; padding-bottom: 0.375rem; }
+    .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+    .py-2\.5 { padding-top: 0.625rem; padding-bottom: 0.625rem; }
+    .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+    .py-3\.5 { padding-top: 0.875rem; padding-bottom: 0.875rem; }
+    .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+    .py-5 { padding-top: 1.25rem; padding-bottom: 1.25rem; }
+    .mt-1 { margin-top: 0.25rem; }
+    .mt-2 { margin-top: 0.5rem; }
+    .mt-4 { margin-top: 1rem; }
+    .mt-5 { margin-top: 1.25rem; }
+    .mt-8 { margin-top: 2rem; }
+    .mb-1 { margin-bottom: 0.25rem; }
+    .mb-1\.5 { margin-bottom: 0.375rem; }
+    .mb-2 { margin-bottom: 0.5rem; }
+    .mb-4 { margin-bottom: 1rem; }
+    .mb-5 { margin-bottom: 1.25rem; }
+    .mr-1 { margin-right: 0.25rem; }
+    .mr-2 { margin-right: 0.5rem; }
+    .mr-3 { margin-right: 0.75rem; }
+    .mr-4 { margin-right: 1rem; }
+    .ml-1 { margin-left: 0.25rem; }
+    .ml-2 { margin-left: 0.5rem; }
+    .space-x-2 > * + * { margin-left: 0.5rem; }
+    .space-x-6 > * + * { margin-left: 1.5rem; }
+    .space-y-4 > * + * { margin-top: 1rem; }
+    .space-y-5 > * + * { margin-top: 1.25rem; }
+    .space-y-6 > * + * { margin-top: 1.5rem; }
+    .flex { display: flex; }
+    .flex-col { flex-direction: column; }
+    .items-center { align-items: center; }
+    .items-start { align-items: flex-start; }
+    .justify-between { justify-content: space-between; }
+    .justify-end { justify-content: flex-end; }
+    .justify-center { justify-content: center; }
+    .grid { display: grid; }
+    .grid-cols-1 { grid-template-columns: repeat(1, 1fr); }
+    .grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+    .gap-2 { gap: 0.5rem; }
+    .gap-3 { gap: 0.75rem; }
+    .gap-4 { gap: 1rem; }
+    .gap-5 { gap: 1.25rem; }
+    .gap-6 { gap: 1.5rem; }
+    .w-full { width: 100%; }
+    .w-8 { width: 2rem; }
+    .w-10 { width: 2.5rem; }
+    .w-16 { width: 4rem; }
+    .h-8 { height: 2rem; }
+    .h-10 { height: 2.5rem; }
+    .min-h-screen { min-height: 100vh; }
+    .fixed { position: fixed; }
+    .absolute { position: absolute; }
+    .relative { position: relative; }
+    .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+    .top-0 { top: 0; }
+    .left-0 { left: 0; }
+    .right-0 { right: 0; }
+    .bottom-0 { bottom: 0; }
+    .bottom-20 { bottom: 5rem; }
+    .z-40 { z-index: 40; }
+    .z-50 { z-index: 50; }
+    .hidden { display: none; }
+    .font-sans { font-family: ui-sans-serif, system-ui, sans-serif; }
+    .font-mono { font-family: ui-monospace, monospace; }
+    .text-xs { font-size: 0.75rem; line-height: 1rem; }
+    .text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+    .text-base { font-size: 1rem; line-height: 1.5rem; }
+    .text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+    .text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+    .text-2xl { font-size: 1.5rem; line-height: 2rem; }
+    .text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+    .font-medium { font-weight: 500; }
+    .font-semibold { font-weight: 600; }
+    .font-bold { font-weight: 700; }
+    .uppercase { text-transform: uppercase; }
+    .tracking-wide { letter-spacing: 0.025em; }
+    .tracking-wider { letter-spacing: 0.05em; }
+    .break-words { word-wrap: break-word; }
+    .whitespace-nowrap { white-space: nowrap; }
+    .overflow-hidden { overflow: hidden; }
+    .overflow-x-auto { overflow-x: auto; }
+    .overflow-y-auto { overflow-y: auto; }
+    .divide-y > * + * { border-top-width: 1px; border-top-color: #e5e7eb; }
+    .divide-gray-100 > * + * { border-top-color: #f3f4f6; }
+    .divide-gray-200 > * + * { border-top-color: #e5e7eb; }
+    .border-b { border-bottom-width: 1px; }
+    .border-t { border-top-width: 1px; }
+    .border-b-2 { border-bottom-width: 2px; }
+    .border-gray-200 { border-color: #e5e7eb; }
+    .sticky { position: sticky; }
+    .backdrop-blur-md { backdrop-filter: blur(12px); }
+    .backdrop-blur { backdrop-filter: blur(4px); }
+    .appearance-none { appearance: none; }
+    .focus\:ring-2:focus { ring-width: 2px; }
+    .focus\:ring-blue-500:focus { ring-color: #3b82f6; }
+    .focus\:ring-green-500:focus { ring-color: #22c55e; }
+    .focus\:ring-indigo-500:focus { ring-color: #6366f1; }
+    .focus\:border-transparent:focus { border-color: transparent; }
+    .hover\:bg-gray-50:hover { background-color: #f9fafb; }
+    .hover\:bg-gray-100:hover { background-color: #f3f4f6; }
+    .hover\:bg-gray-200:hover { background-color: #e5e7eb; }
+    .hover\:bg-gray-900:hover { background-color: #111827; }
+    .hover\:bg-blue-50:hover { background-color: #eff6ff; }
+    .hover\:bg-blue-700:hover { background-color: #1d4ed8; }
+    .hover\:bg-green-700:hover { background-color: #15803d; }
+    .hover\:bg-indigo-700:hover { background-color: #4338ca; }
+    .hover\:text-blue-800:hover { color: #1e40af; }
+    .hover\:text-gray-900:hover { color: #111827; }
+    .active\:bg-blue-700:active { background-color: #1d4ed8; }
+    .active\:bg-green-700:active { background-color: #15803d; }
+    .active\:bg-indigo-700:active { background-color: #4338ca; }
+    .transition { transition-property: all; transition-timing-function: cubic-bezier(0.4,0,0.2,1); transition-duration: 150ms; }
+    .duration-300 { transition-duration: 300ms; }
+    .ease-out { transition-timing-function: cubic-bezier(0,0,0.2,1); }
+    .transform { transform: translateX(0); }
+    .translate-x-full { transform: translateX(100%); }
+    .from-blue-600 { --tw-gradient-from: #2563eb; }
+    .to-indigo-700 { --tw-gradient-to: #4338ca; }
+    .bg-gradient-to-br { background-image: linear-gradient(to bottom right, var(--tw-gradient-from), var(--tw-gradient-to)); }
+    @media (min-width: 768px) {
+      .md\:flex { display: flex; }
+      .md\:hidden { display: none; }
+      .md\:grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+      .md\:grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+      .md\:grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+      .md\:col-span-3 { grid-column: span 3 / span 3; }
+      .md\:col-span-2 { grid-column: span 2 / span 2; }
+      .md\:col-span-1 { grid-column: span 1 / span 1; }
+      .md\:text-2xl { font-size: 1.5rem; }
+      .md\:text-3xl { font-size: 1.875rem; }
+      .md\:text-base { font-size: 1rem; }
+      .md\:p-5 { padding: 1.25rem; }
+      .md\:p-6 { padding: 1.5rem; }
+      .md\:p-8 { padding: 2rem; }
+      .md\:py-8 { padding-top: 2rem; padding-bottom: 2rem; }
+      .md\:px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+      .md\:mt-0 { margin-top: 0; }
+      .md\:mb-7 { margin-bottom: 1.75rem; }
+      .md\:space-y-6 > * + * { margin-top: 1.5rem; }
+      .md\:space-y-8 > * + * { margin-top: 2rem; }
+      .md\:gap-4 { gap: 1rem; }
+      .md\:gap-6 { gap: 1.5rem; }
+      .md\:flex-row { flex-direction: row; }
+      .md\:items-center { align-items: center; }
+      .md\:justify-end { justify-content: flex-end; }
+      .md\:w-auto { width: auto; }
+      .md\:w-96 { width: 24rem; }
+      .md\:bottom-8 { bottom: 2rem; }
+      .md\:right-8 { right: 2rem; }
+      .md\:left-auto { left: auto; }
+      .md\:mx-4 { margin-left: 1rem; margin-right: 1rem; }
+      .md\:rounded-xl { border-radius: 0.75rem; }
+      .md\:items-center { align-items: center; }
+    }
+  </style>
+  
+  <!-- ===== FONT AWESOME — LAZY LOADED, NON-BLOCKING ===== -->
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+  
+  <!-- ===== FULL TAILWIND — LOADED AFTER FIRST PAINT (NON-BLOCKING) ===== -->
+  <script>
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        var tailwind = document.createElement('script');
+        tailwind.src = 'https://cdn.tailwindcss.com';
+        tailwind.async = true;
+        document.head.appendChild(tailwind);
+      }, 100);
+    });
+  </script>
+</head>
+<body class="bg-gray-100 font-sans antialiased relative min-h-screen">
+
+  <!-- ========== MOBILE BOTTOM NAV ========= -->
+  <div class="bottom-nav fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-gray-200 shadow-xl flex justify-around items-center px-2 py-1 z-50 md:hidden" style="padding-bottom: env(safe-area-inset-bottom, 8px);">
+    <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-item-mobile flex flex-col items-center active text-blue-600 bg-blue-50 rounded-xl px-4 py-1">
+      <i class="fas fa-chart-pie text-xl"></i>
+      <span class="text-[10px] mt-0.5">Home</span>
+    </button>
+    <button onclick="switchView('issue')" id="nav-issue" class="nav-item-mobile flex flex-col items-center text-gray-600 rounded-xl px-4 py-1">
+      <i class="fas fa-plus-circle text-xl"></i>
+      <span class="text-[10px] mt-0.5">Issue</span>
+    </button>
+    <button onclick="switchView('redeem')" id="nav-redeem" class="nav-item-mobile flex flex-col items-center text-gray-600 rounded-xl px-4 py-1">
+      <i class="fas fa-check-circle text-xl"></i>
+      <span class="text-[10px] mt-0.5">Redeem</span>
+    </button>
+    <button onclick="switchView('history')" id="nav-history" class="nav-item-mobile flex flex-col items-center text-gray-600 rounded-xl px-4 py-1">
+      <i class="fas fa-clock text-xl"></i>
+      <span class="text-[10px] mt-0.5">History</span>
+    </button>
+  </div>
+
+  <!-- ========== DESKTOP TOP TABS ========= -->
+  <div class="desktop-tabs bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
+    <div class="responsive-container mx-auto flex items-center justify-between py-3">
+      <div class="flex items-center space-x-2">
+        <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl flex items-center justify-center shadow-md">
+          <i class="fas fa-ticket-alt text-white text-xl"></i>
+        </div>
+        <span class="text-2xl font-bold text-gray-900">VoucherPalace</span>
+        <span class="ml-2 bg-green-100 text-green-800 text-xs px-3 py-1.5 rounded-full font-medium">Admin</span>
+      </div>
+      <div class="flex items-center space-x-2">
+        <button onclick="refreshAll()" class="bg-gray-800 text-white px-5 py-2.5 rounded-xl hover:bg-gray-900 transition flex items-center">
+          <i class="fas fa-sync-alt mr-2"></i> Refresh
+        </button>
+      </div>
+    </div>
+    <div class="responsive-container mx-auto flex space-x-6 mt-1 px-4">
+      <button onclick="switchView('dashboard')" id="desk-dashboard" class="desk-tab py-3 px-1 border-b-2 border-blue-600 text-blue-700 font-medium text-sm">Dashboard</button>
+      <button onclick="switchView('issue')" id="desk-issue" class="desk-tab py-3 px-1 border-b-2 border-transparent text-gray-600 hover:text-gray-900 font-medium text-sm">Issue voucher</button>
+      <button onclick="switchView('redeem')" id="desk-redeem" class="desk-tab py-3 px-1 border-b-2 border-transparent text-gray-600 hover:text-gray-900 font-medium text-sm">Redeem</button>
+      <button onclick="switchView('history')" id="desk-history" class="desk-tab py-3 px-1 border-b-2 border-transparent text-gray-600 hover:text-gray-900 font-medium text-sm">Redemption history</button>
+    </div>
+  </div>
+
+  <!-- ========== MAIN RESPONSIVE CONTAINER ========= -->
+  <div class="responsive-container mx-auto px-4 md:px-6 py-5 md:py-8">
+
+    <!-- ********** DASHBOARD VIEW ********** -->
+    <div id="dashboardView" class="space-y-6 md:space-y-8">
+      
+      <!-- STATS GRID — 2 COLUMNS ON MOBILE, 4 ON DESKTOP -->
+      <div class="stats-grid">
+        <div class="bg-white p-4 md:p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col items-start justify-between touch-card">
+          <div class="flex items-center justify-between w-full">
+            <div>
+              <p class="text-gray-500 text-xs uppercase tracking-wider font-medium">Redeemed</p>
+              <p id="totalRedemptions" class="text-xl md:text-3xl font-bold text-gray-900 mt-1">0</p>
+            </div>
+            <div class="bg-blue-50 p-3 md:p-4 rounded-2xl">
+              <i class="fas fa-exchange-alt text-blue-600 text-xl md:text-3xl"></i>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white p-4 md:p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col items-start justify-between touch-card">
+          <div class="flex items-center justify-between w-full">
+            <div>
+              <p class="text-gray-500 text-xs uppercase tracking-wider font-medium">Merchants</p>
+              <p id="activeMerchants" class="text-xl md:text-3xl font-bold text-gray-900 mt-1">0</p>
+            </div>
+            <div class="bg-green-50 p-3 md:p-4 rounded-2xl">
+              <i class="fas fa-store text-green-600 text-xl md:text-3xl"></i>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white p-4 md:p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col items-start justify-between touch-card">
+          <div class="flex items-center justify-between w-full">
+            <div>
+              <p class="text-gray-500 text-xs uppercase tracking-wider font-medium">Active</p>
+              <p id="activeVouchersCount" class="text-xl md:text-3xl font-bold text-gray-900 mt-1">0</p>
+            </div>
+            <div class="bg-purple-50 p-3 md:p-4 rounded-2xl">
+              <i class="fas fa-ticket-alt text-purple-600 text-xl md:text-3xl"></i>
+            </div>
+          </div>
+        </div>
+        <!-- 4th stat card — desktop only -->
+        <div class="hidden md:flex bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex-col items-start justify-between touch-card">
+          <div class="flex items-center justify-between w-full">
+            <div>
+              <p class="text-gray-500 text-xs uppercase tracking-wider font-medium">Companies</p>
+              <p id="statsCompanies" class="text-3xl font-bold text-gray-900 mt-1">0</p>
+            </div>
+            <div class="bg-yellow-50 p-4 rounded-2xl">
+              <i class="fas fa-building text-yellow-600 text-3xl"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUICK ACTIONS + LATEST VOUCHER -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-5 md:gap-6">
+        <div class="md:col-span-3 grid grid-cols-3 md:grid-cols-3 gap-3 md:gap-4">
+          <button onclick="switchView('issue')" class="bg-blue-600 text-white p-4 md:p-5 rounded-xl active:bg-blue-700 transition flex flex-col items-center shadow-sm">
+            <i class="fas fa-plus-circle text-2xl md:text-3xl mb-2"></i>
+            <span class="text-sm md:text-base font-medium">Issue</span>
+          </button>
+          <button onclick="switchView('redeem')" class="bg-green-600 text-white p-4 md:p-5 rounded-xl active:bg-green-700 transition flex flex-col items-center shadow-sm">
+            <i class="fas fa-check-circle text-2xl md:text-3xl mb-2"></i>
+            <span class="text-sm md:text-base font-medium">Redeem</span>
+          </button>
+          <button onclick="openAddUserModal()" class="bg-indigo-600 text-white p-4 md:p-5 rounded-xl active:bg-indigo-700 transition flex flex-col items-center shadow-sm">
+            <i class="fas fa-user-plus text-2xl md:text-3xl mb-2"></i>
+            <span class="text-sm md:text-base font-medium">Add user</span>
+          </button>
+        </div>
+        <div class="bg-white p-4 md:p-5 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between md:col-span-1">
+          <div>
+            <p class="text-gray-500 text-xs uppercase tracking-wider">Latest</p>
+            <div id="latestActiveVoucher" class="text-lg md:text-xl font-bold text-gray-900 mt-1">—</div>
+          </div>
+          <i class="fas fa-ticket-alt text-purple-500 text-3xl"></i>
+        </div>
+      </div>
+
+      <!-- RECENT REDEMPTIONS -->
+      <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+        <div class="px-5 py-4 border-b border-gray-200 flex items-center justify-between">
+          <h2 class="text-base md:text-lg font-semibold text-gray-800 flex items-center">
+            <i class="fas fa-history text-gray-500 mr-2"></i> Recent redemptions
+          </h2>
+          <span id="redemptionCount" class="text-xs bg-gray-100 px-2.5 py-1.5 rounded-full text-gray-700">0</span>
+        </div>
+        <div id="recentRedemptionsListMobile" class="mobile-only divide-y divide-gray-100"></div>
+        <div id="recentRedemptionsTableDesktop" class="desktop-only overflow-x-auto">
+          <table class="data-table">
+            <thead><tr><th>Code</th><th>User</th><th>Merchant</th><th>Value</th><th>Date</th></tr></thead>
+            <tbody id="recentRedemptionsTbody"></tbody>
+          </table>
+        </div>
+        <div class="p-3 bg-gray-50 text-center">
+          <button onclick="switchView('history')" class="text-blue-600 text-sm font-medium py-2 px-4 hover:bg-blue-50 rounded-full">
+            View all redemptions <i class="fas fa-arrow-right ml-1"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ********** ISSUE VOUCHER VIEW ********** -->
+    <div id="issueView" class="hidden space-y-5 md:space-y-6">
+      <div class="bg-white rounded-2xl border border-gray-200 p-5 md:p-8 shadow-sm">
+        <div class="flex items-center mb-5 md:mb-7">
+          <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+            <i class="fas fa-plus-circle text-blue-600 text-xl"></i>
+          </div>
+          <h2 class="text-xl md:text-2xl font-bold text-gray-900">Issue new voucher</h2>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+          <div class="md:col-span-2 lg:col-span-1">
+            <label class="block text-xs font-medium text-gray-600 uppercase tracking-wide mb-1.5">Code *</label>
+            <div class="flex gap-2">
+              <input type="text" id="issueCode" placeholder="VP-1234567890" 
+                     class="flex-1 px-2 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 text-base">
+              <button onclick="generateVoucherCode()" 
+                      class="px-5 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 flex items-center justify-center w-16">
+                <i class="fas fa-dice text-xl"></i>
+              </button>
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 uppercase tracking-wide mb-1.5">Title *</label>
+            <input type="text" id="issueTitle" placeholder="Welcome" 
+                   class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 text-base">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 uppercase tracking-wide mb-1.5">Value *</label>
+            <div class="relative">
+              <span class="absolute left-2 top-3.5 text-gray-500">KES</span>
+              <input type="number" id="issueValue" placeholder="0.00" step="0.01" 
+                     class="w-full pl-10 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 text-base">
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 uppercase tracking-wide mb-1.5">Issuing Company (Optional)</label>
+            <select id="issueCompany" 
+                    class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 text-base">
+              <option value="">Select</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 uppercase tracking-wide mb-1.5">Merchant</label>
+            <select id="issueMerchant" 
+                    class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 text-base">
+              <option value="">Optional</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 uppercase tracking-wide mb-1.5">Assign user</label>
+            <select id="issueUser" 
+                    class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 text-base">
+              <option value="">Optional</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 uppercase tracking-wide mb-1.5">Expiry date</label>
+            <input type="date" id="issueExpiry" 
+                   class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 text-base">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 uppercase tracking-wide mb-1.5">Max redemptions</label>
+            <input type="number" id="issueMaxRedemptions" value="1" min="1" 
+                   class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 text-base">
+          </div>
+          <div class="md:col-span-2 lg:col-span-3">
+            <label class="block text-xs font-medium text-gray-600 uppercase tracking-wide mb-1.5">Description</label>
+            <textarea id="issueDescription" rows="2" placeholder="Optional purpose..." 
+                      class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 text-base"></textarea>
+          </div>
+        </div>
+        
+        <div id="issueResult" class="hidden mt-5"></div>
+        
+        <div class="flex flex-col md:flex-row justify-end gap-3 mt-8">
+          <button onclick="switchView('dashboard')" class="px-6 py-3.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-100 text-base font-medium">
+            Cancel
+          </button>
+          <button onclick="issueVoucher()" 
+                  class="px-8 py-3.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-medium flex items-center justify-center">
+            <i class="fas fa-paper-plane mr-2"></i> Issue voucher
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ********** REDEEM VIEW ********** -->
+    <div id="redeemView" class="hidden space-y-5 md:space-y-6">
+      <div class="bg-white rounded-2xl border border-gray-200 p-5 md:p-8 shadow-sm">
+        <div class="flex items-center mb-5 md:mb-7">
+          <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-4">
+            <i class="fas fa-check-circle text-green-600 text-xl"></i>
+          </div>
+          <h2 class="text-xl md:text-2xl font-bold text-gray-900">Redeem voucher</h2>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="md:col-span-2">
+            <label class="block text-xs font-medium text-gray-600 uppercase tracking-wide mb-1.5">Voucher code *</label>
+            <input type="text" id="redeemVoucherCode" placeholder="Enter code" 
+                   class="w-full px-4 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 text-base">
+            <p class="text-xs text-gray-400 mt-1"><i class="fas fa-enter mr-1"></i> Press Enter to load details</p>
+          </div>
+          
+          <div id="voucherDetails" class="md:col-span-2 hidden p-5 bg-blue-50 rounded-xl border border-blue-200">
+            <div class="flex items-center justify-between flex-wrap gap-2">
+              <div class="flex items-center gap-3">
+                <span class="font-semibold text-blue-900 text-lg" id="voucherTitle"></span>
+                <span id="voucherStatusBadge" class="status-badge"></span>
+              </div>
+              <span class="text-lg font-bold text-green-700 bg-white px-4 py-1.5 rounded-full" id="voucherValue"></span>
+            </div>
+            <div class="text-sm text-blue-700 mt-3 break-words" id="voucherInfo"></div>
+            <div id="voucherStatusMessage" class="mt-2 text-xs font-medium"></div>
+          </div>
+          
+          <div>
+            <label class="block text-xs font-medium text-gray-600 uppercase tracking-wide mb-1.5">User *</label>
+            <select id="redeemUser" 
+                    class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 text-base">
+              <option value="">Select</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 uppercase tracking-wide mb-1.5">Merchant *</label>
+            <select id="redeemMerchant" 
+                    class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 text-base">
+              <option value="">Select</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 uppercase tracking-wide mb-1.5">Redeemed value *</label>
+            <div class="relative">
+              <span class="absolute left-2 top-3.5 text-gray-500">KES</span>
+              <input type="number" id="redeemValue" placeholder="0.00" step="0.01" 
+                     class="w-full pl-10 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 text-base">
+            </div>
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-xs font-medium text-gray-600 uppercase tracking-wide mb-1.5">Notes</label>
+            <textarea id="redeemNotes" rows="2" placeholder="Optional notes..." 
+                      class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 text-base"></textarea>
+          </div>
+        </div>
+        
+        <div id="redeemResult" class="hidden mt-5"></div>
+        
+        <div class="flex flex-col md:flex-row justify-end gap-3 mt-8">
+          <button onclick="switchView('dashboard')" class="px-6 py-3.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-100 text-base">
+            Cancel
+          </button>
+          <button onclick="redeemVoucher()" id="redeemButton"
+                  class="px-8 py-3.5 bg-green-600 text-white rounded-xl hover:bg-green-700 font-medium flex items-center">
+            <i class="fas fa-check-circle mr-2"></i> Confirm redemption
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ********** HISTORY VIEW ********** -->
+    <div id="historyView" class="hidden space-y-5 md:space-y-6">
+      <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+        <div class="px-5 py-5 border-b border-gray-200 flex flex-col md:flex-row md:items-center justify-between">
+          <div>
+            <h2 class="text-xl md:text-2xl font-bold text-gray-900">Redemption history</h2>
+            <p class="text-sm text-gray-600 mt-0.5">Complete list of all voucher redemptions</p>
+          </div>
+          <span id="fullRedemptionCount" class="mt-2 md:mt-0 text-sm bg-gray-100 px-4 py-2 rounded-full font-medium">0 total</span>
+        </div>
+        <div id="fullRedemptionsListMobile" class="mobile-only divide-y divide-gray-100"></div>
+        <div id="fullRedemptionsTableDesktop" class="desktop-only overflow-x-auto">
+          <table class="data-table">
+            <thead><tr><th>ID</th><th>Voucher code</th><th>User</th><th>Merchant</th><th>Value</th><th>Date & time</th></tr></thead>
+            <tbody id="historyTableBody"></tbody>
+          </table>
+        </div>
+        <div id="historyLoadMoreContainer" class="p-5 bg-gray-50 text-center border-t border-gray-200 hidden">
+          <button onclick="loadMoreRedemptions()" id="loadMoreBtn" class="px-6 py-3 bg-white text-blue-600 text-sm font-medium rounded-xl shadow-sm hover:bg-gray-100 border">
+            Load more redemptions
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== ADD USER MODAL ========= -->
+  <div id="addUserModal" class="fixed inset-0 bg-black/50 flex modal-container items-end md:items-center justify-center z-50 hidden modal-sheet">
+    <div class="modal-content bg-white rounded-t-xl md:rounded-xl w-full max-w-lg mx-0 md:mx-4 p-6">
+      <div class="flex justify-between items-center mb-5">
+        <h3 class="text-xl font-bold text-gray-900">Add new user</h3>
+        <button onclick="closeAddUserModal()" class="p-2 hover:bg-gray-100 rounded-full">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Full name *</label>
+          <input type="text" id="userFullName" placeholder="John Doe" class="w-full px-4 py-3.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 text-base">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+          <input type="email" id="userEmail" placeholder="john@example.com" class="w-full px-4 py-3.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 text-base">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Phone *</label>
+          <input type="tel" id="userPhone" placeholder="+1234567890" class="w-full px-4 py-3.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 text-base">
+        </div>
+        <div id="addUserResult" class="hidden"></div>
+        <button onclick="createUser()" class="w-full bg-indigo-600 text-white py-3.5 rounded-xl hover:bg-indigo-700 font-medium">
+          Create user
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast notification -->
+  <div id="floatingToast" class="fixed bottom-20 md:bottom-8 left-4 right-4 md:left-auto md:right-8 md:w-96 bg-gray-900/95 text-white px-5 py-4 rounded-2xl shadow-2xl z-50 hidden floating-toast">
+    <div class="flex items-center">
+      <i class="fas fa-check-circle text-green-400 mr-3 text-xl"></i>
+      <span id="toastMessage" class="text-sm font-medium flex-1"></span>
+      <button onclick="hideToast()" class="ml-2 text-white/70"><i class="fas fa-times"></i></button>
+    </div>
+  </div>
+
+  <script>
+    // ========== INSTANT LOADING PERFORMANCE ENGINE ==========
+    const API_BASE = 'https://voucher.agiza.co.ke';
+    let allRedemptions = [], allVouchers = [], allMerchants = [], allUsers = [], allCompanies = [];
+    let displayedCount = 5;
+    let voucherCache = {};
+
+    // ========== LOCALSTORAGE CACHE — INSTANT REPEAT LOADS ==========
+    const CACHE_TTL = 300000; // 5 minutes
+    
+    function getCached(key) {
+      try {
+        const item = localStorage.getItem('vc_' + key);
+        if (!item) return null;
+        const { data, timestamp } = JSON.parse(item);
+        if (Date.now() - timestamp < CACHE_TTL) return data;
+      } catch(e) {}
+      return null;
+    }
+    
+    function setCached(key, data) {
+      try {
+        localStorage.setItem('vc_' + key, JSON.stringify({
+          data, timestamp: Date.now()
+        }));
+      } catch(e) {}
+    }
+
+    async function fetchWithCache(endpoint, cacheKey) {
+      const cached = getCached(cacheKey);
+      if (cached) return cached;
+      
+      try {
+        const res = await fetch(`${API_BASE}${endpoint}`, {
+          headers: { 'Connection': 'keep-alive' }
+        });
+        const data = await res.json();
+        setCached(cacheKey, data);
+        return data;
+      } catch (e) {
+        console.warn(`Fetch failed for ${endpoint}`);
+        throw e;
+      }
+    }
+
+    // DOM shortcuts
+    const $ = id => document.getElementById(id);
+    const setText = (id, val) => { const el = $(id); if (el) el.textContent = val; };
+    const setHTML = (id, html) => { const el = $(id); if (el) el.innerHTML = html; };
+    const setHidden = (id, hide) => { const el = $(id); if (el) el.classList.toggle('hidden', hide); };
+
+    // ========== VOUCHER STATUS HELPER ==========
+    function getVoucherStatusInfo(status) {
+      const statusMap = {
+        'active': { class: 'status-active', icon: 'fa-check-circle', text: 'ACTIVE', message: '✓ This voucher is active and ready to redeem' },
+        'redeemed': { class: 'status-redeemed', icon: 'fa-check-double', text: 'REDEEMED', message: '✗ This voucher has already been redeemed' },
+        'expired': { class: 'status-expired', icon: 'fa-clock', text: 'EXPIRED', message: '! This voucher has expired' },
+        'inactive': { class: 'status-inactive', icon: 'fa-ban', text: 'INACTIVE', message: '⚠ This voucher is not active' }
+      };
+      return statusMap[status?.toLowerCase()] || { class: 'bg-gray-100 text-gray-800', icon: 'fa-tag', text: status?.toUpperCase() || 'UNKNOWN', message: 'Unknown voucher status' };
+    }
+
+    // ========== FETCH VOUCHER DETAILS WITH STATUS ==========
+    async function fetchVoucherDetails(code) {
+      if (!code) return;
+      
+      if (voucherCache[code]) {
+        populateVoucherDetails(voucherCache[code]);
+        showVoucherStatus(voucherCache[code]);
+        return;
+      }
+      
+      try {
+        const list = await fetchWithCache('/vouchers', 'vouchers');
+        const v = list.find(x => x.code === code);
+        if (v) { 
+          voucherCache[code] = v; 
+          populateVoucherDetails(v); 
+          showVoucherStatus(v); // 👈 THIS SHOWS STATUS IMMEDIATELY
+          showToast(`Voucher loaded • Status: ${v.voucher_status}`);
+        } else { 
+          setHidden('voucherDetails', true); 
+          showResult('redeemResult', '❌ Voucher not found', 'error');
+        }
+      } catch { 
+        showResult('redeemResult', 'Error fetching voucher', 'error'); 
+      }
+    }
+
+    // ========== SHOW VOUCHER STATUS IN UI ==========
+    function showVoucherStatus(voucher) {
+      const statusInfo = getVoucherStatusInfo(voucher.voucher_status);
+      const badgeEl = $('voucherStatusBadge');
+      const messageEl = $('voucherStatusMessage');
+      const redeemBtn = $('redeemButton');
+      
+      if (badgeEl) {
+        badgeEl.className = `status-badge ${statusInfo.class}`;
+        badgeEl.innerHTML = `<i class="fas ${statusInfo.icon} mr-1"></i> ${statusInfo.text}`;
+      }
+      
+      if (messageEl) {
+        messageEl.innerHTML = statusInfo.message;
+        messageEl.className = `mt-2 text-xs font-medium ${voucher.voucher_status === 'active' ? 'text-green-600' : 'text-red-600'}`;
+      }
+      
+      // Disable redeem button if voucher not active
+      if (redeemBtn) {
+        if (voucher.voucher_status !== 'active') {
+          redeemBtn.disabled = true;
+          redeemBtn.classList.add('opacity-50', 'cursor-not-allowed');
+          redeemBtn.title = `Cannot redeem: voucher is ${voucher.voucher_status}`;
+        } else {
+          redeemBtn.disabled = false;
+          redeemBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+          redeemBtn.title = 'Redeem voucher';
+        }
+      }
+      
+      // Show status in redeemResult area
+      const statusColor = voucher.voucher_status === 'active' ? 'green' : 
+                         voucher.voucher_status === 'redeemed' ? 'red' : 'yellow';
+      
+      showResult('redeemResult', `
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <i class="fas ${statusInfo.icon} text-${statusColor}-600 mr-2"></i>
+            <span class="font-medium">Voucher: ${voucher.code}</span>
+          </div>
+          <span class="${statusInfo.class} px-3 py-1 rounded-full text-xs font-bold">
+            ${voucher.voucher_status.toUpperCase()}
+          </span>
+        </div>
+        <div class="text-xs text-gray-600 mt-1">
+          ${voucher.title} • $${voucher.voucher_value}
+          ${voucher.expiry_date ? ` • Expires: ${new Date(voucher.expiry_date).toLocaleDateString()}` : ''}
+        </div>
+      `, voucher.voucher_status === 'active' ? 'success' : 'warning');
+    }
+
+    function populateVoucherDetails(v) {
+      setText('voucherTitle', v.title);
+      setText('voucherValue', `$${v.voucher_value}`);
+      let info = `Code: ${v.code}`;
+      if (v.description) info += ` • ${v.description}`;
+      if (v.expiry_date) {
+        const expiry = new Date(v.expiry_date);
+        const isExpired = expiry < new Date();
+        info += ` • ${isExpired ? 'Expired:' : 'Expires:'} ${expiry.toLocaleDateString()}`;
+      }
+      if (v.merchant_id && allMerchants.length > 0) {
+        const merchant = allMerchants.find(m => m.id === v.merchant_id);
+        if (merchant) info += ` • Merchant: ${merchant.name}`;
+      }
+      setText('voucherInfo', info);
+      setHidden('voucherDetails', false);
+      if ($('redeemValue')) $('redeemValue').value = v.voucher_value;
+    }
+
+    // ========== REDEEM VOUCHER ==========
+    async function redeemVoucher() {
+      const code = $('redeemVoucherCode')?.value, voucher = voucherCache[code];
+      if (!voucher) return showResult('redeemResult', 'Load voucher first', 'error');
+      
+      if (voucher.voucher_status !== 'active') {
+        return showResult('redeemResult', `❌ Cannot redeem: voucher is ${voucher.voucher_status}`, 'error');
+      }
+      
+      const userId = $('redeemUser')?.value, merchantId = $('redeemMerchant')?.value, val = $('redeemValue')?.value;
+      if (!userId || !merchantId || !val) return showResult('redeemResult', 'All fields required', 'error');
+      
+      try {
+        const res = await fetch(`${API_BASE}/vouchers/redeem`, { 
+          method:'POST', 
+          headers:{'Content-Type':'application/json'}, 
+          body: JSON.stringify({ 
+            voucher_id: voucher.id, 
+            user_id: parseInt(userId), 
+            merchant_id: parseInt(merchantId), 
+            redeemed_value: val, 
+            notes: $('redeemNotes')?.value || null 
+          }) 
+        });
+        
+        const data = await res.json();
+        
+        if (res.ok && data.redemption) { 
+          // Update voucher status
+          if (voucherCache[code]) voucherCache[code].voucher_status = 'redeemed';
+          const vIndex = allVouchers.findIndex(v => v.id === voucher.id);
+          if (vIndex !== -1) allVouchers[vIndex].voucher_status = 'redeemed';
+          
+          showResult('redeemResult', `
+            <div class="flex items-center">
+              <i class="fas fa-check-circle text-green-600 mr-2"></i>
+              <span class="font-medium">✅ Voucher redeemed successfully!</span>
+              <span class="ml-2 status-badge status-redeemed">REDEEMED</span>
+            </div>
+            <div class="text-xs text-gray-600 mt-1">Redemption ID: ${data.redemption.id} • Amount: $${val}</div>
+          `, 'success'); 
+          
+          showToast('💰 Redemption complete'); 
+          
+          $('redeemVoucherCode').value = ''; 
+          $('redeemValue').value = ''; 
+          $('redeemNotes').value = ''; 
+          setHidden('voucherDetails', true); 
+          
+          localStorage.removeItem('vc_redemptions');
+          localStorage.removeItem('vc_vouchers');
+          
+          updateLatestActiveVoucher();
+          loadRedemptions(); 
+        }
+        else showResult('redeemResult', `❌ Error: ${data.error || 'Redemption failed'}`, 'error');
+      } catch { 
+        showResult('redeemResult', '❌ Network error', 'error'); 
+      }
+    }
+
+    // ========== VIEW SWITCHER ==========
+    function switchView(viewName) {
+      ['dashboardView', 'issueView', 'redeemView', 'historyView'].forEach(v => setHidden(v, true));
+      setHidden(viewName + 'View', false);
+      
+      ['dashboard','issue','redeem','history'].forEach(id => {
+        const btn = $(`nav-${id}`);
+        if (btn) { btn.classList.remove('active', 'text-blue-600', 'bg-blue-50'); btn.classList.add('text-gray-600'); }
+      });
+      const activeMob = $(`nav-${viewName}`);
+      if (activeMob) { activeMob.classList.add('active', 'text-blue-600', 'bg-blue-50'); activeMob.classList.remove('text-gray-600'); }
+      
+      ['dashboard','issue','redeem','history'].forEach(id => {
+        const desk = $(`desk-${id}`);
+        if (desk) {
+          desk.classList.remove('border-blue-600', 'text-blue-700');
+          desk.classList.add('border-transparent', 'text-gray-600');
+        }
+      });
+      const activeDesk = $(`desk-${viewName}`);
+      if (activeDesk) { activeDesk.classList.add('border-blue-600', 'text-blue-700'); activeDesk.classList.remove('border-transparent', 'text-gray-600'); }
+      
+      if (viewName === 'history') { displayedCount = 5; renderFullRedemptions(); }
+      if (viewName === 'dashboard') renderRecentRedemptionsAll();
+    }
+
+    // ----- FETCH LISTS WITH CACHE -----
+    async function fetchLists() {
+      try {
+        const [users, merchants, companies, vouchers] = await Promise.allSettled([
+          fetchWithCache('/users', 'users'),
+          fetchWithCache('/merchants', 'merchants'),
+          fetchWithCache('/companies', 'companies'),
+          fetchWithCache('/vouchers', 'vouchers')
+        ]);
+
+        if (users.status === 'fulfilled') allUsers = users.value;
+        if (merchants.status === 'fulfilled') allMerchants = merchants.value;
+        if (companies.status === 'fulfilled') allCompanies = companies.value;
+        if (vouchers.status === 'fulfilled') allVouchers = vouchers.value;
+        
+        if (merchants.status !== 'fulfilled') allMerchants = [{id:1,name:'Cafe X'},{id:2,name:'TechShop'}];
+        if (companies.status !== 'fulfilled') allCompanies = [{id:1,name:'Acme'}];
+        if (users.status !== 'fulfilled') allUsers = [{id:1,full_name:'Alice'},{id:2,full_name:'Bob'}];
+        if (vouchers.status !== 'fulfilled') allVouchers = getFallbackVouchers();
+        
+        setText('activeMerchants', allMerchants.length);
+        setText('statsCompanies', allCompanies.length);
+        const activeV = allVouchers.filter(v => v.voucher_status === 'active').length;
+        setText('activeVouchersCount', activeV);
+        updateLatestActiveVoucher();
+
+        // Populate dropdowns
+        ['issueUser','redeemUser'].forEach(id => {
+          const sel = $(id); if (!sel) return;
+          const fragment = document.createDocumentFragment();
+          const defaultOption = document.createElement('option');
+          defaultOption.value = ''; defaultOption.textContent = 'Select User';
+          fragment.appendChild(defaultOption);
+          allUsers.slice(0, 50).forEach(u => {
+            const opt = document.createElement('option');
+            opt.value = u.id;
+            opt.textContent = u.full_name || `User ${u.id}`;
+            fragment.appendChild(opt);
+          });
+          sel.innerHTML = '';
+          sel.appendChild(fragment);
+        });
+
+        ['issueMerchant','redeemMerchant'].forEach(id => {
+          const sel = $(id); if (!sel) return;
+          const fragment = document.createDocumentFragment();
+          const defaultOption = document.createElement('option');
+          defaultOption.value = ''; defaultOption.textContent = 'Select Merchant';
+          fragment.appendChild(defaultOption);
+          allMerchants.slice(0, 50).forEach(m => {
+            const opt = document.createElement('option');
+            opt.value = m.id;
+            opt.textContent = m.name;
+            fragment.appendChild(opt);
+          });
+          sel.innerHTML = '';
+          sel.appendChild(fragment);
+        });
+
+        const compSel = $('issueCompany');
+        if (compSel) {
+          const fragment = document.createDocumentFragment();
+          const defaultOption = document.createElement('option');
+          defaultOption.value = ''; defaultOption.textContent = 'Select Company';
+          fragment.appendChild(defaultOption);
+          allCompanies.slice(0, 50).forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c.id;
+            opt.textContent = c.name;
+            fragment.appendChild(opt);
+          });
+          compSel.innerHTML = '';
+          compSel.appendChild(fragment);
+        }
+        
+      } catch(e) {
+        console.warn('Ultimate fallback:', e);
+        allMerchants = [{id:1,name:'Cafe X'},{id:2,name:'TechShop'}];
+        allCompanies = [{id:1,name:'Acme'}];
+        allUsers = [{id:1,full_name:'Alice'},{id:2,full_name:'Bob'}];
+        allVouchers = getFallbackVouchers();
+        setText('activeMerchants', '2'); setText('statsCompanies', '1'); setText('activeVouchersCount', '2');
+        updateLatestActiveVoucher();
+      }
+    }
+
+    function updateLatestActiveVoucher() {
+      const el = $('latestActiveVoucher'); if (!el) return;
+      const active = allVouchers.filter(v => v.voucher_status === 'active');
+      if (!active.length) { el.innerHTML = 'None active'; return; }
+      const sorted = [...active].sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+      el.innerHTML = `${sorted[0].code} <span class="text-gray-500 text-sm">$${sorted[0].voucher_value}</span>`;
+    }
+
+    // ----- REDEMPTIONS WITH CACHE -----
+    async function loadRedemptions() {
+      try { 
+        const data = await fetchWithCache('/voucher-redemptions', 'redemptions');
+        allRedemptions = data; 
+      } catch { 
+        allRedemptions = getFallbackRedemptions(); 
+      }
+      setText('totalRedemptions', allRedemptions.length);
+      setText('redemptionCount', `${allRedemptions.length}`);
+      setText('fullRedemptionCount', `${allRedemptions.length} total`);
+      renderRecentRedemptionsAll();
+      renderFullRedemptions();
+    }
+
+    function renderRecentRedemptionsAll() {
+      const mobileContainer = $('recentRedemptionsListMobile');
+      if (mobileContainer) {
+        const recent = allRedemptions.slice(0, 3);
+        if (!recent.length) mobileContainer.innerHTML = '<div class="p-6 text-center text-gray-400">No redemptions</div>';
+        else {
+          let html = '';
+          recent.forEach(r => {
+            html += `<div class="flex items-center justify-between p-4 touch-card">
+                      <div class="flex items-center">
+                        <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                          <i class="fas fa-ticket-alt text-blue-600 text-xs"></i>
+                        </div>
+                        <div>
+                          <span class="font-mono bg-gray-100 px-2 py-0.5 rounded text-xs">${r.Voucher?.code || r.voucher_id}</span>
+                          <p class="text-xs text-gray-600 mt-1">${r.User?.full_name?.split(' ')[0] || ''} · ${r.Merchant?.name || ''}</p>
+                        </div>
+                      </div>
+                      <span class="text-sm font-bold text-green-600">$${r.redeemed_value}</span>
+                    </div>`;
+          });
+          mobileContainer.innerHTML = html;
+        }
+      }
+      const tbody = $('recentRedemptionsTbody');
+      if (tbody) {
+        const recent = allRedemptions.slice(0, 5);
+        tbody.innerHTML = recent.map(r => {
+          const d = r.redeemed_at ? new Date(r.redeemed_at).toLocaleString() : '';
+          return `<tr>
+                    <td class="font-mono">${r.Voucher?.code || r.voucher_id}</td>
+                    <td>${r.User?.full_name || r.user_id}</td>
+                    <td>${r.Merchant?.name || r.merchant_id}</td>
+                    <td class="font-semibold text-green-700">$${r.redeemed_value}</td>
+                    <td class="text-gray-500">${d}</td>
+                  </tr>`;
+        }).join('');
+      }
+    }
+
+    function renderFullRedemptions() {
+      const mobileList = $('fullRedemptionsListMobile');
+      const tableBody = $('historyTableBody');
+      const toShow = allRedemptions.slice(0, displayedCount);
+      if (mobileList) {
+        if (!toShow.length) mobileList.innerHTML = '<div class="p-6 text-center text-gray-400">No redemptions</div>';
+        else {
+          let html = '';
+          toShow.forEach(r => {
+            const d = r.redeemed_at ? new Date(r.redeemed_at).toLocaleString() : '';
+            html += `<div class="p-4 flex justify-between items-center border-b">
+                      <div>
+                        <span class="font-mono bg-gray-100 px-2 py-1 rounded text-xs">${r.Voucher?.code || r.voucher_id}</span>
+                        <p class="text-xs text-gray-600 mt-1">${r.User?.full_name || ''} · ${r.Merchant?.name || ''}</p>
+                      </div>
+                      <div class="text-right">
+                        <span class="text-green-700 font-bold">$${r.redeemed_value}</span>
+                        <p class="text-xs text-gray-400">${d}</p>
+                      </div>
+                    </div>`;
+          });
+          mobileList.innerHTML = html;
+        }
+      }
+      if (tableBody) {
+        tableBody.innerHTML = toShow.map(r => {
+          const d = r.redeemed_at ? new Date(r.redeemed_at).toLocaleString() : '';
+          return `<tr>
+                    <td>${r.id}</td>
+                    <td class="font-mono">${r.Voucher?.code || r.voucher_id}</td>
+                    <td>${r.User?.full_name || r.user_id}</td>
+                    <td>${r.Merchant?.name || r.merchant_id}</td>
+                    <td class="font-semibold text-green-700">$${r.redeemed_value}</td>
+                    <td class="text-gray-500 text-sm">${d}</td>
+                  </tr>`;
+        }).join('');
+      }
+      const container = $('historyLoadMoreContainer');
+      if (container) {
+        if (displayedCount >= allRedemptions.length) container.classList.add('hidden');
+        else container.classList.remove('hidden');
+      }
+    }
+
+    function loadMoreRedemptions() { displayedCount += 10; renderFullRedemptions(); }
+    
+    function generateVoucherCode() {
+      const code = 'VP-' + Array.from({length:10}, () => Math.floor(Math.random()*10)).join('');
+      if ($('issueCode')) $('issueCode').value = code;
+    }
+
+    async function issueVoucher() {
+      const code = $('issueCode')?.value, title = $('issueTitle')?.value, val = $('issueValue')?.value, companyId = $('issueCompany')?.value;
+      if (!code || !title || !val) return showResult('issueResult', 'Required fields', 'error');
+      const payload = { code, title, voucher_value: val, company_id: parseInt(companyId), assigned_user_id: $('issueUser')?.value ? parseInt($('issueUser').value) : null, merchant_id: $('issueMerchant')?.value ? parseInt($('issueMerchant').value) : null, expiry_date: $('issueExpiry')?.value || null, max_redemptions: parseInt($('issueMaxRedemptions')?.value) || 1, description: $('issueDescription')?.value || null, voucher_status: 'active', value_type:'fixed', min_spend:'0.00' };
+      try { 
+        const res = await fetch(`${API_BASE}/vouchers/issue`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+        const data = await res.json();
+        if (res.ok && data.voucher) { 
+          showResult('issueResult', `✅ ${data.voucher.code} issued`, 'success'); 
+          showToast('Voucher created'); 
+          $('issueTitle').value = ''; $('issueValue').value = ''; $('issueDescription').value = ''; 
+          allVouchers.push(data.voucher); 
+          voucherCache[data.voucher.code] = data.voucher; 
+          updateLatestActiveVoucher(); 
+          generateVoucherCode();
+          localStorage.removeItem('vc_vouchers');
+        } 
+        else showResult('issueResult', `Error: ${data.error}`, 'error');
+      } catch { showResult('issueResult', 'Network error', 'error'); }
+    }
+
+    async function createUser() {
+      const name = $('userFullName')?.value, email = $('userEmail')?.value, phone = $('userPhone')?.value;
+      if (!name || !email || !phone) return showResult('addUserResult', 'All fields required', 'error');
+      try {
+        const res = await fetch(`${API_BASE}/users`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ full_name: name, email, phone, user_status:'active' }) });
+        if (res.ok) { showToast('User created'); closeAddUserModal(); localStorage.removeItem('vc_users'); fetchLists(); } 
+        else showResult('addUserResult', 'Error', 'error');
+      } catch { showResult('addUserResult', 'Network error', 'error'); }
+    }
+
+    function refreshAll() { 
+      localStorage.removeItem('vc_users');
+      localStorage.removeItem('vc_merchants');
+      localStorage.removeItem('vc_companies');
+      localStorage.removeItem('vc_vouchers');
+      localStorage.removeItem('vc_redemptions');
+      fetchLists(); 
+      loadRedemptions(); 
+      showToast('Refreshed'); 
+    }
+    
+    function showToast(msg) { 
+      const t = $('floatingToast'), m = $('toastMessage'); 
+      if (!t||!m) return; 
+      m.textContent = msg; 
+      t.classList.remove('hidden'); 
+      setTimeout(() => t.classList.add('hidden'), 2800); 
+    }
+    
+    function hideToast() { $('floatingToast')?.classList.add('hidden'); }
+    
+    function showResult(id, msg, type='info') {
+      const el = $(id); if (!el) return;
+      const color = type==='error'?'red':type==='success'?'green':'blue';
+      el.innerHTML = `<div class="p-3 bg-${color}-50 text-${color}-800 rounded-xl border border-${color}-200 text-sm">${msg}</div>`;
+      el.classList.remove('hidden'); 
+      setTimeout(() => el.classList.add('hidden'), 4000);
+    }
+
+    function openAddUserModal() { setHidden('addUserModal', false); }
+    function closeAddUserModal() { setHidden('addUserModal', true); setHidden('addUserResult', true); }
+
+    function getFallbackRedemptions() { 
+      return [ 
+        { id:1, redeemed_value:'25.00', redeemed_at: new Date().toISOString(), Voucher:{code:'VP-SUMMER'}, User:{full_name:'Alice'}, Merchant:{name:'Cafe X'} }, 
+        { id:2, redeemed_value:'10.50', redeemed_at: new Date(Date.now()-86400000).toISOString(), Voucher:{code:'WELCOME'}, User:{full_name:'Bob'}, Merchant:{name:'TechShop'} } 
+      ]; 
+    }
+    
+    function getFallbackVouchers() { 
+      return [ 
+        { id:1, code:'VP-SUMMER', title:'Summer', voucher_value:'25.00', voucher_status:'active', created_at: new Date().toISOString() }, 
+        { id:2, code:'WELCOME', title:'Welcome', voucher_value:'10.00', voucher_status:'active', created_at: new Date().toISOString() },
+        { id:3, code:'EXPIRED-01', title:'Expired', voucher_value:'50.00', voucher_status:'expired', created_at: new Date(Date.now()-86400000*30).toISOString(), expiry_date: new Date(Date.now()-86400000).toISOString() },
+        { id:4, code:'REDEEMED-01', title:'Redeemed', voucher_value:'15.00', voucher_status:'redeemed', created_at: new Date().toISOString() }
+      ]; 
+    }
+
+    // ========== INSTANT STARTUP ==========
+    (function init() {
+      const cachedUsers = getCached('users');
+      const cachedMerchants = getCached('merchants');
+      const cachedCompanies = getCached('companies');
+      const cachedVouchers = getCached('vouchers');
+      const cachedRedemptions = getCached('redemptions');
+      
+      if (cachedUsers) allUsers = cachedUsers;
+      if (cachedMerchants) allMerchants = cachedMerchants;
+      if (cachedCompanies) allCompanies = cachedCompanies;
+      if (cachedVouchers) allVouchers = cachedVouchers;
+      if (cachedRedemptions) { allRedemptions = cachedRedemptions; }
+      
+      setText('activeMerchants', allMerchants?.length || '0');
+      setText('statsCompanies', allCompanies?.length || '0');
+      const activeV = allVouchers?.filter(v => v?.voucher_status === 'active').length || 0;
+      setText('activeVouchersCount', activeV);
+      updateLatestActiveVoucher();
+      
+      if (allRedemptions.length) {
+        setText('totalRedemptions', allRedemptions.length);
+        setText('redemptionCount', `${allRedemptions.length}`);
+        setText('fullRedemptionCount', `${allRedemptions.length} total`);
+        renderRecentRedemptionsAll();
+        renderFullRedemptions();
+      }
+      
+      generateVoucherCode();
+      if ($('issueExpiry')) {
+        const future = new Date(Date.now() + 30*86400000).toISOString().split('T')[0];
+        $('issueExpiry').value = future;
+      }
+      
+      switchView('dashboard');
+      
+      setTimeout(() => {
+        fetchLists();
+        loadRedemptions();
+      }, 50);
+      
+      const redeemCode = $('redeemVoucherCode');
+      if (redeemCode) redeemCode.addEventListener('keypress', function(e) { 
+        if (e.key === 'Enter') fetchVoucherDetails(this.value); 
+      });
+    })();
+  </script>
+</body>
+</html>

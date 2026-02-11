@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>VoucherPalace · Universal Documentation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      scroll-behavior: smooth;
+    }
+    
+    .process-flow {
+      position: relative;
+      padding: 2rem 0;
+    }
+    
+    .flow-arrow {
+      position: absolute;
+      top: 50%;
+      right: -20px;
+      transform: translateY(-50%);
+      color: #94a3b8;
+      font-size: 1.5rem;
+    }
+    
+    .step-card {
+      transition: all 0.3s ease;
+    }
+    
+    .step-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    
+    .diagram-container {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 1rem;
+      padding: 2rem;
+      color: white;
+    }
+    
+    .individual-gradient {
+      background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+    }
+    
+    .company-gradient {
+      background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+    }
+    
+    .code-block {
+      background: #1e293b;
+      color: #e2e8f0;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.875rem;
+      overflow-x: auto;
+    }
+    
+    .table-of-contents {
+      position: sticky;
+      top: 2rem;
+      max-height: calc(100vh - 4rem);
+      overflow-y: auto;
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .badge-blue { background: #dbeafe; color: #1e40af; }
+    .badge-green { background: #dcfce7; color: #166534; }
+    .badge-purple { background: #f3e8ff; color: #6b21a8; }
+    .badge-orange { background: #ffedd5; color: #9a3412; }
+    .badge-individual { background: #fef3c7; color: #92400e; }
+    
+    .issuer-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+    
+    .issuer-company { background: #e0f2fe; color: #0369a1; }
+    .issuer-individual { background: #fef9c3; color: #854d0e; }
+    
+    @media print {
+      .no-print { display: none; }
+      body { background: white; }
+    }
+  </style>
+</head>
+<body class="bg-gray-50 antialiased">
+
+  <!-- Skip to content link -->
+  <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded-lg z-50">
+    Skip to content
+  </a>
+
+  <!-- Header -->
+  <header class="bg-gradient-to-r from-blue-600 via-purple-600 to-orange-600 text-white py-12 md:py-16 no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row md:items-center justify-between">
+        <div>
+          <div class="flex items-center space-x-3 mb-4">
+            <div class="w-12 h-12 bg-white bg-opacity-20 rounded-xl backdrop-blur-lg flex items-center justify-center">
+              <i class="fas fa-ticket-alt text-white text-2xl"></i>
+            </div>
+            <h1 class="text-3xl md:text-4xl font-bold">VoucherPalace</h1>
+          </div>
+          <p class="text-xl text-blue-100 max-w-2xl">
+            Complete documentation for <span class="font-bold bg-white text-blue-600 px-3 py-1 rounded-full text-sm">Companies</span>, 
+            <span class="font-bold bg-yellow-200 text-yellow-800 px-3 py-1 rounded-full text-sm">Individuals</span>, 
+            <span class="font-bold bg-green-200 text-green-800 px-3 py-1 rounded-full text-sm">Merchants</span> & 
+            <span class="font-bold bg-purple-200 text-purple-800 px-3 py-1 rounded-full text-sm">Users</span>
+          </p>
+          <p class="text-blue-200 mt-2 text-sm flex items-center flex-wrap gap-2">
+            <i class="fas fa-calendar-alt mr-2"></i> Version 2.1 • Last updated: February 2026
+            <span class="bg-white/20 px-3 py-1 rounded-full text-xs ml-2">
+              <i class="fas fa-user-tie mr-1"></i> Companies + Individuals can issue
+            </span>
+          </p>
+        </div>
+        <div class="mt-6 md:mt-0 flex space-x-3">
+          <a href="#quick-start" class="bg-white text-blue-600 px-6 py-3 rounded-lg font-medium hover:bg-blue-50 transition flex items-center">
+            <i class="fas fa-rocket mr-2"></i> Quick Start
+          </a>
+          <a href="https://voucher.agiza.co.ke" target="_blank" class="bg-blue-500 bg-opacity-30 text-white px-6 py-3 rounded-lg font-medium hover:bg-opacity-40 transition flex items-center backdrop-blur-sm">
+            <i class="fas fa-external-link-alt mr-2"></i> Live Demo
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="flex flex-col lg:flex-row gap-8">
+      
+      <!-- Table of Contents - Sidebar -->
+      <aside class="lg:w-1/4 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 table-of-contents">
+          <h2 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+            <i class="fas fa-list-ul mr-2 text-blue-600"></i>
+            Contents
+          </h2>
+          <nav class="space-y-2 text-sm">
+            <a href="#system-overview" class="block py-2 px-3 rounded-lg hover:bg-gray-50 text-gray-700 hover:text-blue-600 transition">
+              <i class="fas fa-chevron-right mr-2 text-xs"></i>1. System Overview
+            </a>
+            <a href="#who-can-issue" class="block py-2 px-3 rounded-lg hover:bg-gray-50 text-gray-700 hover:text-blue-600 transition">
+              <i class="fas fa-chevron-right mr-2 text-xs"></i>2. Who Can Issue Vouchers?
+            </a>
+            <a href="#process-flow" class="block py-2 px-3 rounded-lg hover:bg-gray-50 text-gray-700 hover:text-blue-600 transition">
+              <i class="fas fa-chevron-right mr-2 text-xs"></i>3. Process Flow
+            </a>
+            <a href="#getting-started" class="block py-2 px-3 rounded-lg hover:bg-gray-50 text-gray-700 hover:text-blue-600 transition">
+              <i class="fas fa-chevron-right mr-2 text-xs"></i>4. Getting Started
+            </a>
+            <a href="#for-companies" class="block py-2 px-3 rounded-lg hover:bg-gray-50 text-gray-700 hover:text-blue-600 transition">
+              <i class="fas fa-chevron-right mr-2 text-xs"></i>5. For Companies
+            </a>
+            <a href="#for-individuals" class="block py-2 px-3 rounded-lg hover:bg-gray-50 text-gray-700 hover:text-blue-600 transition">
+              <i class="fas fa-chevron-right mr-2 text-xs"></i>6. For Individuals
+            </a>
+            <a href="#for-merchants" class="block py-2 px-3 rounded-lg hover:bg-gray-50 text-gray-700 hover:text-blue-600 transition">
+              <i class="fas fa-chevron-right mr-2 text-xs"></i>7. For Merchants
+            </a>
+            <a href="#for-users" class="block py-2 px-3 rounded-lg hover:bg-gray-50 text-gray-700 hover:text-blue-600 transition">
+              <i class="fas fa-chevron-right mr-2 text-xs"></i>8. For Users
+            </a>
+            <a href="#voucher-lifecycle" class="block py-2 px-3 rounded-lg hover:bg-gray-50 text-gray-700 hover:text-blue-600 transition">
+              <i class="fas fa-chevron-right mr-2 text-xs"></i>9. Voucher Lifecycle
+            </a>
+            <a href="#redemption-process" class="block py-2 px-3 rounded-lg hover:bg-gray-50 text-gray-700 hover:text-blue-600 transition">
+              <i class="fas fa-chevron-right mr-2 text-xs"></i>10. Redemption Process
+            </a>
+            <a href="#dashboard-guide" class="block py-2 px-3 rounded-lg hover:bg-gray-50 text-gray-700 hover:text-blue-600 transition">
+              <i class="fas fa-chevron-right mr-2 text-xs"></i>11. Dashboard Guide
+            </a>
+            <a href="#api-integration" class="block py-2 px-3 rounded-lg hover:bg-gray-50 text-gray-700 hover:text-blue-600 transition">
+              <i class="fas fa-chevron-right mr-2 text-xs"></i>12. API Integration
+            </a>
+            <a href="#troubleshooting" class="block py-2 px-3 rounded-lg hover:bg-gray-50 text-gray-700 hover:text-blue-600 transition">
+              <i class="fas fa-chevron-right mr-2 text-xs"></i>13. Troubleshooting
+            </a>
+            <a href="#faq" class="block py-2 px-3 rounded-lg hover:bg-gray-50 text-gray-700 hover:text-blue-600 transition">
+              <i class="fas fa-chevron-right mr-2 text-xs"></i>14. FAQ
+            </a>
+          </nav>
+          
+          <div class="mt-8 pt-6 border-t border-gray-200">
+            <div class="bg-gradient-to-br from-blue-50 to-yellow-50 rounded-lg p-4">
+              <h3 class="font-medium text-blue-800 mb-2 flex items-center">
+                <i class="fas fa-users mr-2"></i> Everyone Can Issue!
+              </h3>
+              <p class="text-sm text-blue-700 mb-3">
+                ✓ Companies create campaign vouchers<br>
+                ✓ Individuals create personal/gift vouchers<br>
+                ✓ No company account? No problem!
+              </p>
+              <a href="#for-individuals" class="text-sm bg-white px-4 py-2 rounded-lg text-blue-600 font-medium hover:bg-blue-100 transition block text-center">
+                <i class="fas fa-user mr-2"></i> Individual Issuer Guide
+              </a>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Documentation Content -->
+      <main id="main-content" class="lg:w-3/4">
+        
+        <!-- SYSTEM OVERVIEW -->
+        <section id="system-overview" class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 md:p-8 mb-8 scroll-mt-8">
+          <div class="flex items-center mb-6">
+            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold mr-3">Chapter 1</span>
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900">System Overview</h2>
+          </div>
+          
+          <div class="prose max-w-none text-gray-600">
+            <p class="text-lg leading-relaxed">
+              VoucherPalace is a <span class="font-bold text-blue-600">universal voucher platform</span> that enables <span class="bg-blue-100 px-2 py-1 rounded">companies</span> 
+              AND <span class="bg-yellow-100 px-2 py-1 rounded">individuals</span> to create, distribute, and track digital vouchers, 
+              while allowing merchants to redeem them and users to utilize their vouchers seamlessly.
+            </p>
+            <p class="mt-4 text-gray-700">
+              <span class="font-bold text-lg">🎯 Key Differentiator:</span> Unlike traditional voucher systems that only allow companies to issue vouchers, 
+              <span class="underline decoration-yellow-400 decoration-2">VoucherPalace empowers anyone to become a voucher issuer</span> — 
+              whether you're a multinational corporation or an individual giving a birthday gift.
+            </p>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-6 mt-8">
+            <!-- Company Card -->
+            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border-l-8 border-blue-600">
+              <div class="flex items-center mb-4">
+                <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
+                  <i class="fas fa-building text-white text-xl"></i>
+                </div>
+                <div>
+                  <h3 class="text-xl font-semibold text-gray-900">Companies</h3>
+                  <span class="issuer-tag issuer-company text-xs">Bulk Issuer</span>
+                </div>
+              </div>
+              <p class="text-gray-600 mb-4">Create and manage large-scale voucher campaigns, track performance, and analyze redemption data.</p>
+              <ul class="space-y-2 text-sm text-gray-600">
+                <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i> Issue 1,000+ vouchers at once</li>
+                <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i> Set value, expiry, and merchant restrictions</li>
+                <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i> View redemption analytics & reports</li>
+                <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i> Assign to specific users or open campaigns</li>
+              </ul>
+            </div>
+            
+            <!-- Individual Card -->
+            <div class="bg-gradient-to-br from-yellow-50 to-amber-50 rounded-xl p-6 border-l-8 border-yellow-500">
+              <div class="flex items-center mb-4">
+                <div class="w-12 h-12 bg-yellow-500 rounded-lg flex items-center justify-center mr-3">
+                  <i class="fas fa-user text-white text-xl"></i>
+                </div>
+                <div>
+                  <h3 class="text-xl font-semibold text-gray-900">Individuals</h3>
+                  <span class="issuer-tag issuer-individual text-xs">Personal Issuer</span>
+                </div>
+              </div>
+              <p class="text-gray-600 mb-4">Create gift vouchers, rewards, or personal promotions — no company account required.</p>
+              <ul class="space-y-2 text-sm text-gray-600">
+                <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i> Issue single or multiple vouchers</li>
+                <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i> Perfect for birthdays, gifts, or small businesses</li>
+                <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i> Auto-generate secure 10-digit codes</li>
+                <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i> No minimum issue requirements</li>
+              </ul>
+            </div>
+            
+            <!-- Merchant Card -->
+            <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border-l-8 border-green-600">
+              <div class="flex items-center mb-4">
+                <div class="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center mr-3">
+                  <i class="fas fa-store text-white text-xl"></i>
+                </div>
+                <div>
+                  <h3 class="text-xl font-semibold text-gray-900">Merchants</h3>
+                </div>
+              </div>
+              <p class="text-gray-600 mb-4">Accept and validate vouchers from both companies AND individuals.</p>
+              <ul class="space-y-2 text-sm text-gray-600">
+                <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i> Real-time voucher validation</li>
+                <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i> Instant redemption processing</li>
+                <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i> Transaction history & daily reports</li>
+                <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i> Accept vouchers from any issuer</li>
+              </ul>
+            </div>
+            
+            <!-- User Card -->
+            <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6 border-l-8 border-purple-600">
+              <div class="flex items-center mb-4">
+                <div class="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center mr-3">
+                  <i class="fas fa-users text-white text-xl"></i>
+                </div>
+                <div>
+                  <h3 class="text-xl font-semibold text-gray-900">Users</h3>
+                </div>
+              </div>
+              <p class="text-gray-600 mb-4">Receive and redeem vouchers at participating merchants.</p>
+              <ul class="space-y-2 text-sm text-gray-600">
+                <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i> View available vouchers</li>
+                <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i> Check voucher status in real-time</li>
+                <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i> Track redemption history</li>
+                <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i> Receive vouchers from companies or friends</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- WHO CAN ISSUE VOUCHERS? -->
+        <section id="who-can-issue" class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 md:p-8 mb-8 scroll-mt-8">
+          <div class="flex items-center mb-6">
+            <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-semibold mr-3">Chapter 2</span>
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900">Who Can Issue Vouchers?</h2>
+          </div>
+          
+          <div class="grid md:grid-cols-2 gap-8">
+            <!-- Company Issuance -->
+            <div class="bg-blue-50 rounded-xl p-6">
+              <div class="flex items-center mb-4">
+                <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
+                  <i class="fas fa-building text-white text-xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 ml-4">Companies</h3>
+              </div>
+              <div class="space-y-4">
+                <p class="text-gray-700">Companies can issue vouchers for:</p>
+                <ul class="space-y-3">
+                  <li class="flex items-start">
+                    <span class="bg-blue-200 text-blue-800 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-2 mt-0.5">1</span>
+                    <span class="text-gray-700"><span class="font-bold">Marketing campaigns</span> — Promotional discounts, loyalty rewards</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="bg-blue-200 text-blue-800 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-2 mt-0.5">2</span>
+                    <span class="text-gray-700"><span class="font-bold">Employee benefits</span> — Wellness rewards, performance bonuses</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="bg-blue-200 text-blue-800 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-2 mt-0.5">3</span>
+                    <span class="text-gray-700"><span class="font-bold">Partner programs</span> — Affiliate rewards, reseller incentives</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="bg-blue-200 text-blue-800 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-2 mt-0.5">4</span>
+                    <span class="text-gray-700"><span class="font-bold">Bulk issuance</span> — Thousands of vouchers at once</span>
+                  </li>
+                </ul>
+                <div class="mt-4 bg-white bg-opacity-50 p-3 rounded-lg">
+                  <span class="font-semibold text-blue-800">Company features:</span>
+                  <p class="text-sm text-gray-600 mt-1">Analytics dashboard, campaign tracking, merchant restrictions, user assignment</p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Individual Issuance -->
+            <div class="bg-yellow-50 rounded-xl p-6">
+              <div class="flex items-center mb-4">
+                <div class="w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center">
+                  <i class="fas fa-user text-white text-xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 ml-4">Individuals</h3>
+              </div>
+              <div class="space-y-4">
+                <p class="text-gray-700">Individuals can issue vouchers for:</p>
+                <ul class="space-y-3">
+                  <li class="flex items-start">
+                    <span class="bg-yellow-200 text-yellow-800 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-2 mt-0.5">1</span>
+                    <span class="text-gray-700"><span class="font-bold">Gifts</span> — Birthdays, weddings, holidays, special occasions</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="bg-yellow-200 text-yellow-800 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-2 mt-0.5">2</span>
+                    <span class="text-gray-700"><span class="font-bold">Small businesses</span> — Sole proprietors, freelancers, consultants</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="bg-yellow-200 text-yellow-800 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-2 mt-0.5">3</span>
+                    <span class="text-gray-700"><span class="font-bold">Personal promotions</span> — Garage sales, services, events</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="bg-yellow-200 text-yellow-800 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-2 mt-0.5">4</span>
+                    <span class="text-gray-700"><span class="font-bold">Peer-to-peer</span> — Send money as spendable vouchers</span>
+                  </li>
+                </ul>
+                <div class="mt-4 bg-white bg-opacity-50 p-3 rounded-lg">
+                  <span class="font-semibold text-yellow-800">Individual features:</span>
+                  <p class="text-sm text-gray-600 mt-1">Auto-generated codes, no minimum issue, instant creation, free to start</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Summary Table -->
+          <div class="mt-8 overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200 border border-gray-200 rounded-lg">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Issuer Type</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Account Required</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Minimum Issue</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Analytics</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Best For</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="issuer-tag issuer-company">Company</span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">Business account</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">None (bulk optional)</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">✅ Full dashboard</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">Marketing, HR, partnerships</td>
+                </tr>
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="issuer-tag issuer-individual">Individual</span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">Personal account</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">1 voucher only</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">✅ Basic tracking</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">Gifts, small biz, personal</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- PROCESS FLOW DIAGRAMS - UPDATED FOR DUAL ISSUERS -->
+        <section id="process-flow" class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 md:p-8 mb-8 scroll-mt-8">
+          <div class="flex items-center mb-6">
+            <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-semibold mr-3">Chapter 3</span>
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900">Process Flow</h2>
+          </div>
+
+          <!-- Complete Ecosystem Flow with Dual Issuers -->
+          <div class="mb-12">
+            <h3 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+              <i class="fas fa-sitemap mr-2 text-purple-600"></i>
+              Complete Voucher Ecosystem — Two Issuer Types
+            </h3>
+            
+            <!-- Company Flow -->
+            <div class="diagram-container company-gradient mb-6">
+              <div class="flex items-center mb-4">
+                <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center mr-3">
+                  <i class="fas fa-building text-blue-600"></i>
+                </div>
+                <h4 class="text-white font-bold">Company Issuance Flow</h4>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-5 gap-2 text-center">
+                <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-4">
+                  <span class="text-white font-bold">1</span>
+                  <p class="text-white text-sm mt-1">Company creates campaign</p>
+                </div>
+                <div class="flex items-center justify-center text-white text-xl">→</div>
+                <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-4">
+                  <span class="text-white font-bold">2</span>
+                  <p class="text-white text-sm mt-1">Issues bulk vouchers</p>
+                </div>
+                <div class="flex items-center justify-center text-white text-xl">→</div>
+                <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-4">
+                  <span class="text-white font-bold">3</span>
+                  <p class="text-white text-sm mt-1">Assigns to users</p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Individual Flow -->
+            <div class="diagram-container individual-gradient">
+              <div class="flex items-center mb-4">
+                <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center mr-3">
+                  <i class="fas fa-user text-yellow-600"></i>
+                </div>
+                <h4 class="text-white font-bold">Individual Issuance Flow</h4>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-5 gap-2 text-center">
+                <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-4">
+                  <span class="text-white font-bold">1</span>
+                  <p class="text-white text-sm mt-1">Individual logs in</p>
+                </div>
+                <div class="flex items-center justify-center text-white text-xl">→</div>
+                <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-4">
+                  <span class="text-white font-bold">2</span>
+                  <p class="text-white text-sm mt-1">Clicks "Issue Voucher"</p>
+                </div>
+                <div class="flex items-center justify-center text-white text-xl">→</div>
+                <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-4">
+                  <span class="text-white font-bold">3</span>
+                  <p class="text-white text-sm mt-1">Generates code & sends</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Side by Side Comparison -->
+          <div class="grid md:grid-cols-2 gap-8 mt-8">
+            <!-- Company Issuance Flow -->
+            <div class="border border-blue-200 rounded-xl p-6 bg-blue-50">
+              <h4 class="text-lg font-semibold text-blue-900 mb-4 flex items-center">
+                <i class="fas fa-building mr-2"></i>
+                Company Voucher Issuance
+              </h4>
+              <div class="space-y-4">
+                <div class="flex items-start">
+                  <span class="flex-shrink-0 w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold text-sm mr-3">1</span>
+                  <div>
+                    <p class="font-medium text-gray-900">Company account required</p>
+                    <p class="text-sm text-gray-600">Registered business entity</p>
+                  </div>
+                </div>
+                <div class="flex items-start ml-4 pl-3 border-l-2 border-blue-300">
+                  <span class="flex-shrink-0 w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold text-sm mr-3">2</span>
+                  <div>
+                    <p class="font-medium text-gray-900">Fill voucher details</p>
+                    <p class="text-sm text-gray-600">Code, title, value, company, optional user/merchant</p>
+                  </div>
+                </div>
+                <div class="flex items-start ml-4 pl-3 border-l-2 border-blue-300">
+                  <span class="flex-shrink-0 w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold text-sm mr-3">3</span>
+                  <div>
+                    <p class="font-medium text-gray-900">Set campaign parameters</p>
+                    <p class="text-sm text-gray-600">Bulk issuance, expiry, max redemptions</p>
+                  </div>
+                </div>
+                <div class="flex items-start ml-4 pl-3 border-l-2 border-blue-300">
+                  <span class="flex-shrink-0 w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold text-sm mr-3">4</span>
+                  <div>
+                    <p class="font-medium text-gray-900">Vouchers issued</p>
+                    <p class="text-sm text-gray-600">Stored with 'active' status</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Individual Issuance Flow -->
+            <div class="border border-yellow-200 rounded-xl p-6 bg-yellow-50">
+              <h4 class="text-lg font-semibold text-yellow-800 mb-4 flex items-center">
+                <i class="fas fa-user mr-2"></i>
+                Individual Voucher Issuance
+              </h4>
+              <div class="space-y-4">
+                <div class="flex items-start">
+                  <span class="flex-shrink-0 w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center text-white font-semibold text-sm mr-3">1</span>
+                  <div>
+                    <p class="font-medium text-gray-900">Personal account only</p>
+                    <p class="text-sm text-gray-600">No business registration needed</p>
+                  </div>
+                </div>
+                <div class="flex items-start ml-4 pl-3 border-l-2 border-yellow-400">
+                  <span class="flex-shrink-0 w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center text-white font-semibold text-sm mr-3">2</span>
+                  <div>
+                    <p class="font-medium text-gray-900">Click dice button</p>
+                    <p class="text-sm text-gray-600">Auto-generate 10-digit code (VP-XXXXXXXXXX)</p>
+                  </div>
+                </div>
+                <div class="flex items-start ml-4 pl-3 border-l-2 border-yellow-400">
+                  <span class="flex-shrink-0 w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center text-white font-semibold text-sm mr-3">3</span>
+                  <div>
+                    <p class="font-medium text-gray-900">Enter title & value</p>
+                    <p class="text-sm text-gray-600">Simple form, optional expiry</p>
+                  </div>
+                </div>
+                <div class="flex items-start ml-4 pl-3 border-l-2 border-yellow-400">
+                  <span class="flex-shrink-0 w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center text-white font-semibold text-sm mr-3">4</span>
+                  <div>
+                    <p class="font-medium text-gray-900">Share with recipient</p>
+                    <p class="text-sm text-gray-600">Copy code and send via message/email</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- GETTING STARTED - DUAL TRACK -->
+        <section id="getting-started" class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 md:p-8 mb-8 scroll-mt-8">
+          <div class="flex items-center mb-6">
+            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold mr-3">Chapter 4</span>
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900">Getting Started</h2>
+          </div>
+          
+          <div class="grid md:grid-cols-2 gap-8">
+            <!-- Company Track -->
+            <div class="border border-blue-200 rounded-xl p-6">
+              <div class="flex items-center mb-4">
+                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                  <span class="text-2xl font-bold text-blue-600">1</span>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 ml-4">Company Account</h3>
+              </div>
+              <ol class="space-y-4 ml-4">
+                <li class="flex items-start">
+                  <span class="flex-shrink-0 w-5 h-5 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 text-xs font-bold mr-2 mt-0.5">A</span>
+                  <span class="text-gray-700">Submit business registration documents</span>
+                </li>
+                <li class="flex items-start">
+                  <span class="flex-shrink-0 w-5 h-5 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 text-xs font-bold mr-2 mt-0.5">B</span>
+                  <span class="text-gray-700">Receive company admin credentials</span>
+                </li>
+                <li class="flex items-start">
+                  <span class="flex-shrink-0 w-5 h-5 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 text-xs font-bold mr-2 mt-0.5">C</span>
+                  <span class="text-gray-700">Access full analytics dashboard</span>
+                </li>
+                <li class="flex items-start">
+                  <span class="flex-shrink-0 w-5 h-5 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 text-xs font-bold mr-2 mt-0.5">D</span>
+                  <span class="text-gray-700">Start issuing bulk vouchers</span>
+                </li>
+              </ol>
+            </div>
+            
+            <!-- Individual Track -->
+            <div class="border border-yellow-200 rounded-xl p-6">
+              <div class="flex items-center mb-4">
+                <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
+                  <span class="text-2xl font-bold text-yellow-600">2</span>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 ml-4">Individual Account</h3>
+              </div>
+              <ol class="space-y-4 ml-4">
+                <li class="flex items-start">
+                  <span class="flex-shrink-0 w-5 h-5 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600 text-xs font-bold mr-2 mt-0.5">A</span>
+                  <span class="text-gray-700">Sign up with email & phone</span>
+                </li>
+                <li class="flex items-start">
+                  <span class="flex-shrink-0 w-5 h-5 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600 text-xs font-bold mr-2 mt-0.5">B</span>
+                  <span class="text-gray-700">Immediate access — no approval needed</span>
+                </li>
+                <li class="flex items-start">
+                  <span class="flex-shrink-0 w-5 h-5 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600 text-xs font-bold mr-2 mt-0.5">C</span>
+                  <span class="text-gray-700">Click "Issue" and generate code instantly</span>
+                </li>
+                <li class="flex items-start">
+                  <span class="flex-shrink-0 w-5 h-5 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600 text-xs font-bold mr-2 mt-0.5">D</span>
+                  <span class="text-gray-700">Start issuing vouchers in under 1 minute</span>
+                </li>
+              </ol>
+            </div>
+          </div>
+        </section>
+
+        <!-- FOR COMPANIES -->
+        <section id="for-companies" class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 md:p-8 mb-8 scroll-mt-8">
+          <div class="flex items-center mb-6">
+            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold mr-3">Chapter 5</span>
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900">For Companies</h2>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-8">
+            <div>
+              <h3 class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                <i class="fas fa-ticket-alt text-blue-600 mr-2"></i>
+                Bulk Voucher Issuance
+              </h3>
+              <div class="bg-gray-50 rounded-lg p-5 mb-4">
+                <h4 class="font-medium text-gray-900 mb-3">Step-by-Step Guide:</h4>
+                <ol class="space-y-3">
+                  <li class="flex items-start">
+                    <span class="flex-shrink-0 w-5 h-5 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 text-xs font-bold mr-2 mt-0.5">1</span>
+                    <span class="text-gray-700">Navigate to <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-mono">Company Dashboard > Issue</span></span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="flex-shrink-0 w-5 h-5 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 text-xs font-bold mr-2 mt-0.5">2</span>
+                    <span class="text-gray-700">Select <span class="font-bold">"Bulk Issue"</span> or upload CSV</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="flex-shrink-0 w-5 h-5 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 text-xs font-bold mr-2 mt-0.5">3</span>
+                    <span class="text-gray-700">Set campaign parameters (expiry, value, merchant restrictions)</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="flex-shrink-0 w-5 h-5 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 text-xs font-bold mr-2 mt-0.5">4</span>
+                    <span class="text-gray-700">Assign to specific users or leave open for anyone</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="flex-shrink-0 w-5 h-5 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 text-xs font-bold mr-2 mt-0.5">5</span>
+                    <span class="text-gray-700">Click <span class="bg-blue-600 text-white px-2 py-1 rounded text-xs">Issue Vouchers</span> — all codes generated instantly</span>
+                  </li>
+                </ol>
+              </div>
+              <div class="bg-blue-50 p-4 rounded-lg">
+                <p class="text-sm text-blue-800">
+                  <i class="fas fa-chart-line mr-2"></i>
+                  <span class="font-bold">Company Analytics:</span> Track redemption rates, popular merchants, user engagement, and ROI.
+                </p>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                <i class="fas fa-chart-bar text-blue-600 mr-2"></i>
+                Company Features
+              </h3>
+              <div class="bg-gray-50 rounded-lg p-5">
+                <h4 class="font-medium text-gray-900 mb-3">Enterprise Capabilities:</h4>
+                <ul class="space-y-3">
+                  <li class="flex items-center">
+                    <i class="fas fa-check-circle text-blue-500 mr-2"></i>
+                    <span class="text-gray-700"><span class="font-medium">Bulk operations:</span> 1,000+ vouchers in one click</span>
+                  </li>
+                  <li class="flex items-center">
+                    <i class="fas fa-check-circle text-blue-500 mr-2"></i>
+                    <span class="text-gray-700"><span class="font-medium">User segmentation:</span> Assign to specific user groups</span>
+                  </li>
+                  <li class="flex items-center">
+                    <i class="fas fa-check-circle text-blue-500 mr-2"></i>
+                    <span class="text-gray-700"><span class="font-medium">Merchant restrictions:</span> Limit redemption to specific stores</span>
+                  </li>
+                  <li class="flex items-center">
+                    <i class="fas fa-check-circle text-blue-500 mr-2"></i>
+                    <span class="text-gray-700"><span class="font-medium">Custom branding:</span> Company logo on voucher pages</span>
+                  </li>
+                  <li class="flex items-center">
+                    <i class="fas fa-check-circle text-blue-500 mr-2"></i>
+                    <span class="text-gray-700"><span class="font-medium">API access:</span> Integrate with your systems</span>
+                  </li>
+                  <li class="flex items-center">
+                    <i class="fas fa-check-circle text-blue-500 mr-2"></i>
+                    <span class="text-gray-700"><span class="font-medium">Export data:</span> CSV/PDF reports</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- FOR INDIVIDUALS (NEW SECTION) -->
+        <section id="for-individuals" class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 md:p-8 mb-8 scroll-mt-8">
+          <div class="flex items-center mb-6">
+            <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-semibold mr-3">Chapter 6</span>
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900">For Individuals</h2>
+          </div>
+
+          <div class="bg-gradient-to-r from-yellow-50 to-amber-50 rounded-xl p-6 mb-8">
+            <div class="flex items-center mb-4">
+              <div class="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center">
+                <i class="fas fa-user text-white text-2xl"></i>
+              </div>
+              <div class="ml-4">
+                <h3 class="text-2xl font-bold text-gray-900">Anyone Can Issue Vouchers</h3>
+                <p class="text-gray-700">No company? No problem! Create gift vouchers in seconds.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-8">
+            <div>
+              <h3 class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                <i class="fas fa-gift text-yellow-600 mr-2"></i>
+                Issuing Gift Vouchers
+              </h3>
+              <div class="bg-yellow-50 rounded-lg p-5">
+                <ol class="space-y-4">
+                  <li class="flex items-start">
+                    <span class="flex-shrink-0 w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center text-white text-xs font-bold mr-3">1</span>
+                    <div>
+                      <span class="font-bold text-gray-900">Click "Issue Voucher"</span>
+                      <p class="text-sm text-gray-600">From the main dashboard</p>
+                    </div>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="flex-shrink-0 w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center text-white text-xs font-bold mr-3">2</span>
+                    <div>
+                      <span class="font-bold text-gray-900">Generate code automatically</span>
+                      <p class="text-sm text-gray-600">Click the 🎲 dice button — creates VP-XXXXXXXXXX</p>
+                    </div>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="flex-shrink-0 w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center text-white text-xs font-bold mr-3">3</span>
+                    <div>
+                      <span class="font-bold text-gray-900">Add title & value</span>
+                      <p class="text-sm text-gray-600">e.g., "Birthday Gift", $25.00</p>
+                    </div>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="flex-shrink-0 w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center text-white text-xs font-bold mr-3">4</span>
+                    <div>
+                      <span class="font-bold text-gray-900">Set expiry (optional)</span>
+                      <p class="text-sm text-gray-600">Default 30 days, or choose your own date</p>
+                    </div>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="flex-shrink-0 w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center text-white text-xs font-bold mr-3">5</span>
+                    <div>
+                      <span class="font-bold text-gray-900">Issue & share</span>
+                      <p class="text-sm text-gray-600">Copy the code and send via WhatsApp, SMS, or email</p>
+                    </div>
+                  </li>
+                </ol>
+                <div class="mt-6 bg-white p-4 rounded-lg">
+                  <p class="text-sm font-medium text-yellow-800 flex items-center">
+                    <i class="fas fa-lightbulb mr-2"></i>
+                    Pro tip: You can issue multiple vouchers one after another — each gets a unique code!
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                <i class="fas fa-store text-yellow-600 mr-2"></i>
+                Use Cases for Individuals
+              </h3>
+              <div class="space-y-4">
+                <div class="bg-white border border-yellow-200 rounded-lg p-4">
+                  <div class="flex items-center mb-2">
+                    <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center mr-3">
+                      <i class="fas fa-birthday-cake text-yellow-600"></i>
+                    </div>
+                    <h4 class="font-bold text-gray-900">Birthday Gifts</h4>
+                  </div>
+                  <p class="text-sm text-gray-600 ml-11">Create a $50 voucher for your friend to use at their favorite cafe or store.</p>
+                </div>
+                
+                <div class="bg-white border border-yellow-200 rounded-lg p-4">
+                  <div class="flex items-center mb-2">
+                    <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center mr-3">
+                      <i class="fas fa-tshirt text-yellow-600"></i>
+                    </div>
+                    <h4 class="font-bold text-gray-900">Small Business Owners</h4>
+                  </div>
+                  <p class="text-sm text-gray-600 ml-11">Freelancers, consultants, artists — issue vouchers for your services without forming a company.</p>
+                </div>
+                
+                <div class="bg-white border border-yellow-200 rounded-lg p-4">
+                  <div class="flex items-center mb-2">
+                    <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center mr-3">
+                      <i class="fas fa-hand-holding-usd text-yellow-600"></i>
+                    </div>
+                    <h4 class="font-bold text-gray-900">Family Rewards</h4>
+                  </div>
+                  <p class="text-sm text-gray-600 ml-11">Reward your kids with "screen time" or "dessert" vouchers — fully customizable.</p>
+                </div>
+                
+                <div class="bg-white border border-yellow-200 rounded-lg p-4">
+                  <div class="flex items-center mb-2">
+                    <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center mr-3">
+                      <i class="fas fa-users text-yellow-600"></i>
+                    </div>
+                    <h4 class="font-bold text-gray-900">Event Organizers</h4>
+                  </div>
+                  <p class="text-sm text-gray-600 ml-11">Create tickets or drink vouchers for parties, weddings, and community events.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Quick Comparison -->
+          <div class="mt-8 bg-gray-50 rounded-xl p-6">
+            <h4 class="font-bold text-gray-900 mb-4 flex items-center">
+              <i class="fas fa-balance-scale mr-2 text-yellow-600"></i>
+              Individual vs Company — What's the Difference?
+            </h4>
+            <div class="grid md:grid-cols-2 gap-6">
+              <div class="flex items-start">
+                <div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-white text-xs font-bold mr-3">I</div>
+                <div>
+                  <p class="font-medium text-gray-900">Individual Account</p>
+                  <p class="text-sm text-gray-600">Instant signup, no approval, 1-click code generation, perfect for gifts and personal use.</p>
+                </div>
+              </div>
+              <div class="flex items-start">
+                <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-xs font-bold mr-3">C</div>
+                <div>
+                  <p class="font-medium text-gray-900">Company Account</p>
+                  <p class="text-sm text-gray-600">Bulk issuance, analytics, merchant restrictions, API access, user management.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- FOR MERCHANTS -->
+        <section id="for-merchants" class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 md:p-8 mb-8 scroll-mt-8">
+          <div class="flex items-center mb-6">
+            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold mr-3">Chapter 7</span>
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900">For Merchants</h2>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-8">
+            <div>
+              <h3 class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                <i class="fas fa-check-circle text-green-600 mr-2"></i>
+                Redeeming Vouchers
+              </h3>
+              <div class="bg-gray-50 rounded-lg p-5 mb-4">
+                <h4 class="font-medium text-gray-900 mb-3">Quick Redemption Guide:</h4>
+                <ol class="space-y-3">
+                  <li class="flex items-start">
+                    <span class="flex-shrink-0 w-5 h-5 bg-green-100 rounded-full flex items-center justify-center text-green-600 text-xs font-bold mr-2 mt-0.5">1</span>
+                    <span class="text-gray-700">Click <span class="bg-green-600 text-white px-2 py-1 rounded text-xs">Redeem Voucher</span> button</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="flex-shrink-0 w-5 h-5 bg-green-100 rounded-full flex items-center justify-center text-green-600 text-xs font-bold mr-2 mt-0.5">2</span>
+                    <span class="text-gray-700">Enter the 10-digit voucher code</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="flex-shrink-0 w-5 h-5 bg-green-100 rounded-full flex items-center justify-center text-green-600 text-xs font-bold mr-2 mt-0.5">3</span>
+                    <span class="text-gray-700">System auto-fills voucher details — <span class="font-bold">shows issuer (Company or Individual)</span></span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="flex-shrink-0 w-5 h-5 bg-green-100 rounded-full flex items-center justify-center text-green-600 text-xs font-bold mr-2 mt-0.5">4</span>
+                    <span class="text-gray-700">Select the redeeming user</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="flex-shrink-0 w-5 h-5 bg-green-100 rounded-full flex items-center justify-center text-green-600 text-xs font-bold mr-2 mt-0.5">5</span>
+                    <span class="text-gray-700">Click <span class="bg-green-600 text-white px-2 py-1 rounded text-xs">Confirm Redemption</span></span>
+                  </li>
+                </ol>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                <i class="fas fa-shield-alt text-green-600 mr-2"></i>
+                Validation Rules
+              </h3>
+              <div class="bg-gray-50 rounded-lg p-5">
+                <h4 class="font-medium text-gray-900 mb-3">System automatically checks:</h4>
+                <ul class="space-y-3">
+                  <li class="flex items-center">
+                    <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                    <span class="text-gray-700">Voucher exists in system</span>
+                  </li>
+                  <li class="flex items-center">
+                    <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                    <span class="text-gray-700">Voucher status is <span class="bg-green-100 text-green-800 px-2 py-0.5 rounded-full text-xs">ACTIVE</span></span>
+                  </li>
+                  <li class="flex items-center">
+                    <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                    <span class="text-gray-700">Not expired (valid expiry date)</span>
+                  </li>
+                  <li class="flex items-center">
+                    <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                    <span class="text-gray-700">Redemptions under max limit</span>
+                  </li>
+                  <li class="flex items-center">
+                    <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                    <span class="text-gray-700">User is valid and active</span>
+                  </li>
+                  <li class="flex items-center mt-2 pt-2 border-t border-gray-200">
+                    <i class="fas fa-info-circle text-blue-500 mr-2"></i>
+                    <span class="text-gray-700 font-medium">Merchants can redeem vouchers from BOTH companies AND individuals</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- FOR USERS -->
+        <section id="for-users" class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 md:p-8 mb-8 scroll-mt-8">
+          <div class="flex items-center mb-6">
+            <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-semibold mr-3">Chapter 8</span>
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900">For Users</h2>
+          </div>
+
+          <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-6">
+            <h3 class="text-xl font-semibold text-gray-900 mb-4">How to Redeem Your Voucher</h3>
+            <div class="grid md:grid-cols-3 gap-6">
+              <div class="text-center">
+                <div class="w-16 h-16 bg-white rounded-full shadow-md flex items-center justify-center mx-auto mb-3">
+                  <i class="fas fa-gift text-purple-600 text-2xl"></i>
+                </div>
+                <h4 class="font-medium text-gray-900 mb-1">1. Receive Voucher</h4>
+                <p class="text-sm text-gray-600">Get your unique code from a company OR an individual</p>
+              </div>
+              <div class="text-center">
+                <div class="w-16 h-16 bg-white rounded-full shadow-md flex items-center justify-center mx-auto mb-3">
+                  <i class="fas fa-store text-purple-600 text-2xl"></i>
+                </div>
+                <h4 class="font-medium text-gray-900 mb-1">2. Visit Merchant</h4>
+                <p class="text-sm text-gray-600">Go to any participating merchant location</p>
+              </div>
+              <div class="text-center">
+                <div class="w-16 h-16 bg-white rounded-full shadow-md flex items-center justify-center mx-auto mb-3">
+                  <i class="fas fa-check-double text-purple-600 text-2xl"></i>
+                </div>
+                <h4 class="font-medium text-gray-900 mb-1">3. Present Code</h4>
+                <p class="text-sm text-gray-600">Provide your voucher code to the merchant</p>
+              </div>
+            </div>
+            <div class="mt-6 p-4 bg-white bg-opacity-50 rounded-lg">
+              <p class="text-sm text-gray-700 flex items-center">
+                <i class="fas fa-info-circle text-purple-500 mr-2"></i>
+                You can check your voucher status and redemption history through your user dashboard. 
+                Vouchers from companies and individuals appear the same to you!
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- VOUCHER LIFECYCLE -->
+        <section id="voucher-lifecycle" class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 md:p-8 mb-8 scroll-mt-8">
+          <div class="flex items-center mb-6">
+            <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-semibold mr-3">Chapter 9</span>
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900">Voucher Lifecycle</h2>
+          </div>
+
+          <div class="relative py-8">
+            <!-- Timeline -->
+            <div class="absolute left-8 top-0 bottom-0 w-0.5 bg-gray-200 md:left-1/2 md:transform md:-translate-x-1/2"></div>
+            
+            <div class="space-y-12">
+              <!-- Step 1 - Issuance (Dual Track) -->
+              <div class="relative flex flex-col md:flex-row md:items-center md:justify-between">
+                <div class="absolute left-0 w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center md:relative md:left-auto z-10">
+                  <i class="fas fa-plus-circle text-blue-600 text-2xl"></i>
+                </div>
+                <div class="ml-20 md:ml-0 md:w-5/12 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                  <span class="badge badge-blue mb-2">Step 1</span>
+                  <h4 class="font-semibold text-gray-900 mb-1">Issued</h4>
+                  <p class="text-gray-600 text-sm">Voucher is created with status 'active'</p>
+                  <div class="mt-2 flex gap-2">
+                    <span class="issuer-tag issuer-company text-xs">By Company</span>
+                    <span class="issuer-tag issuer-individual text-xs">By Individual</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Step 2 -->
+              <div class="relative flex flex-col md:flex-row md:items-center md:justify-between md:flex-row-reverse">
+                <div class="absolute left-0 w-16 h-16 bg-green-100 rounded-full flex items-center justify-center md:relative md:left-auto z-10">
+                  <i class="fas fa-share text-green-600 text-2xl"></i>
+                </div>
+                <div class="ml-20 md:ml-0 md:w-5/12 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                  <span class="badge badge-green mb-2">Step 2</span>
+                  <h4 class="font-semibold text-gray-900 mb-1">Distributed</h4>
+                  <p class="text-gray-600 text-sm">Voucher code is shared with the user</p>
+                </div>
+              </div>
+
+              <!-- Step 3 -->
+              <div class="relative flex flex-col md:flex-row md:items-center md:justify-between">
+                <div class="absolute left-0 w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center md:relative md:left-auto z-10">
+                  <i class="fas fa-check-circle text-purple-600 text-2xl"></i>
+                </div>
+                <div class="ml-20 md:ml-0 md:w-5/12 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                  <span class="badge badge-purple mb-2">Step 3</span>
+                  <h4 class="font-semibold text-gray-900 mb-1">Redeemed</h4>
+                  <p class="text-gray-600 text-sm">Merchant processes redemption, status changes to 'redeemed'</p>
+                </div>
+              </div>
+
+              <!-- Step 4 -->
+              <div class="relative flex flex-col md:flex-row md:items-center md:justify-between md:flex-row-reverse">
+                <div class="absolute left-0 w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center md:relative md:left-auto z-10">
+                  <i class="fas fa-archive text-gray-600 text-2xl"></i>
+                </div>
+                <div class="ml-20 md:ml-0 md:w-5/12 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                  <span class="badge badge-orange mb-2">Step 4</span>
+                  <h4 class="font-semibold text-gray-900 mb-1">Completed</h4>
+                  <p class="text-gray-600 text-sm">Redemption recorded, analytics updated, voucher archived</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- REDEMPTION PROCESS -->
+        <section id="redemption-process" class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 md:p-8 mb-8 scroll-mt-8">
+          <div class="flex items-center mb-6">
+            <span class="bg-pink-100 text-pink-800 px-3 py-1 rounded-full text-sm font-semibold mr-3">Chapter 10</span>
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900">Redemption Process</h2>
+          </div>
+
+          <div class="grid md:grid-cols-3 gap-6">
+            <div class="bg-blue-50 rounded-xl p-6 text-center">
+              <div class="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-search text-white text-2xl"></i>
+              </div>
+              <h4 class="font-semibold text-gray-900 mb-2">1. Validation</h4>
+              <p class="text-sm text-gray-700">System checks status, expiry, and redemption limits</p>
+            </div>
+            <div class="bg-green-50 rounded-xl p-6 text-center">
+              <div class="w-20 h-20 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-check text-white text-2xl"></i>
+              </div>
+              <h4 class="font-semibold text-gray-900 mb-2">2. Authorization</h4>
+              <p class="text-sm text-gray-700">Confirms merchant and user are authorized</p>
+            </div>
+            <div class="bg-purple-50 rounded-xl p-6 text-center">
+              <div class="w-20 h-20 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-save text-white text-2xl"></i>
+              </div>
+              <h4 class="font-semibold text-gray-900 mb-2">3. Recording</h4>
+              <p class="text-sm text-gray-700">Creates permanent redemption record</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- DASHBOARD GUIDE -->
+        <section id="dashboard-guide" class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 md:p-8 mb-8 scroll-mt-8">
+          <div class="flex items-center mb-6">
+            <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-semibold mr-3">Chapter 11</span>
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900">Dashboard Guide</h2>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-8">
+            <div>
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">Key Components</h3>
+              <div class="space-y-4">
+                <div class="flex items-start">
+                  <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
+                    <i class="fas fa-chart-pie text-blue-600"></i>
+                  </div>
+                  <div>
+                    <h4 class="font-medium text-gray-900">Stats Cards</h4>
+                    <p class="text-sm text-gray-600">Total redemptions, active merchants, latest voucher</p>
+                  </div>
+                </div>
+                <div class="flex items-start">
+                  <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
+                    <i class="fas fa-plus-circle text-blue-600"></i>
+                  </div>
+                  <div>
+                    <h4 class="font-medium text-gray-900">Issue Voucher</h4>
+                    <p class="text-sm text-gray-600">Form to create vouchers — works for both companies AND individuals</p>
+                  </div>
+                </div>
+                <div class="flex items-start">
+                  <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
+                    <i class="fas fa-check-circle text-green-600"></i>
+                  </div>
+                  <div>
+                    <h4 class="font-medium text-gray-900">Redeem Voucher</h4>
+                    <p class="text-sm text-gray-600">Code input with auto-fill and status display</p>
+                  </div>
+                </div>
+                <div class="flex items-start">
+                  <div class="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
+                    <i class="fas fa-dice text-yellow-600"></i>
+                  </div>
+                  <div>
+                    <h4 class="font-medium text-gray-900">Auto-Generate</h4>
+                    <p class="text-sm text-gray-600">🎲 Dice button creates 10-digit secure codes instantly</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Tips</h3>
+              <div class="bg-gray-50 rounded-lg p-5">
+                <ul class="space-y-3">
+                  <li class="flex items-start">
+                    <i class="fas fa-lightbulb text-yellow-500 mt-1 mr-3"></i>
+                    <span class="text-sm text-gray-700"><span class="font-bold">Individuals:</span> Use the 🎲 dice button to generate gift codes instantly</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-lightbulb text-yellow-500 mt-1 mr-3"></i>
+                    <span class="text-sm text-gray-700"><span class="font-bold">Companies:</span> Upload CSV for 1000+ vouchers in one click</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-lightbulb text-yellow-500 mt-1 mr-3"></i>
+                    <span class="text-sm text-gray-700">Press <span class="font-mono bg-gray-200 px-1 py-0.5 rounded">Enter</span> after typing voucher code for instant lookup</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-lightbulb text-yellow-500 mt-1 mr-3"></i>
+                    <span class="text-sm text-gray-700">Voucher status shows immediately when you enter a code</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- API INTEGRATION -->
+        <section id="api-integration" class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 md:p-8 mb-8 scroll-mt-8">
+          <div class="flex items-center mb-6">
+            <span class="bg-gray-800 text-white px-3 py-1 rounded-full text-sm font-semibold mr-3">Chapter 12</span>
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900">API Integration</h2>
+          </div>
+
+          <div class="bg-gray-900 rounded-xl p-6 text-white">
+            <h3 class="text-lg font-semibold mb-4 flex items-center">
+              <i class="fas fa-code mr-2"></i>
+              Base URL
+            </h3>
+            <div class="code-block mb-6">
+              https://voucher.agiza.co.ke
+            </div>
+
+            <h4 class="font-medium mb-3 text-gray-300">Available Endpoints:</h4>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div class="bg-gray-800 rounded-lg p-4">
+                <span class="bg-blue-600 text-xs px-2 py-1 rounded">GET</span>
+                <span class="ml-2 font-mono text-sm">/vouchers</span>
+                <p class="text-xs text-gray-400 mt-2">List all vouchers</p>
+              </div>
+              <div class="bg-gray-800 rounded-lg p-4">
+                <span class="bg-green-600 text-xs px-2 py-1 rounded">POST</span>
+                <span class="ml-2 font-mono text-sm">/vouchers/issue</span>
+                <p class="text-xs text-gray-400 mt-2">Issue new voucher (company or individual)</p>
+              </div>
+              <div class="bg-gray-800 rounded-lg p-4">
+                <span class="bg-green-600 text-xs px-2 py-1 rounded">POST</span>
+                <span class="ml-2 font-mono text-sm">/vouchers/redeem</span>
+                <p class="text-xs text-gray-400 mt-2">Redeem voucher</p>
+              </div>
+              <div class="bg-gray-800 rounded-lg p-4">
+                <span class="bg-purple-600 text-xs px-2 py-1 rounded">GET</span>
+                <span class="ml-2 font-mono text-sm">/voucher-redemptions</span>
+                <p class="text-xs text-gray-400 mt-2">Get redemptions</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TROUBLESHOOTING -->
+        <section id="troubleshooting" class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 md:p-8 mb-8 scroll-mt-8">
+          <div class="flex items-center mb-6">
+            <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-semibold mr-3">Chapter 13</span>
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900">Troubleshooting</h2>
+          </div>
+
+          <div class="space-y-4">
+            <div class="border border-gray-200 rounded-lg p-4">
+              <h3 class="font-semibold text-gray-900 mb-2 flex items-center">
+                <i class="fas fa-exclamation-circle text-red-500 mr-2"></i>
+                Voucher not found
+              </h3>
+              <p class="text-gray-700 text-sm">Ensure the code is entered exactly as shown, including the VP- prefix. Codes are case-sensitive.</p>
+            </div>
+            <div class="border border-gray-200 rounded-lg p-4">
+              <h3 class="font-semibold text-gray-900 mb-2 flex items-center">
+                <i class="fas fa-exclamation-circle text-red-500 mr-2"></i>
+                Voucher expired
+              </h3>
+              <p class="text-gray-700 text-sm">Check the expiry date. Expired vouchers cannot be redeemed. Contact the issuer (company or individual).</p>
+            </div>
+            <div class="border border-gray-200 rounded-lg p-4">
+              <h3 class="font-semibold text-gray-900 mb-2 flex items-center">
+                <i class="fas fa-exclamation-circle text-red-500 mr-2"></i>
+                Cannot issue voucher as individual
+              </h3>
+              <p class="text-gray-700 text-sm">Make sure you're logged in with a personal account (not a company account). The same form works for both!</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- FAQ -->
+        <section id="faq" class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 md:p-8 mb-8 scroll-mt-8">
+          <div class="flex items-center mb-6">
+            <span class="bg-teal-100 text-teal-800 px-3 py-1 rounded-full text-sm font-semibold mr-3">Chapter 14</span>
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900">Frequently Asked Questions</h2>
+          </div>
+
+          <div class="space-y-4">
+            <div class="border-b border-gray-200 pb-4">
+              <h3 class="font-semibold text-gray-900 mb-2">Do I need a company to issue vouchers?</h3>
+              <p class="text-gray-700 text-sm"><span class="font-bold text-green-600">No!</span> Individuals can issue vouchers immediately after signing up. Perfect for gifts, small businesses, or personal use.</p>
+            </div>
+            <div class="border-b border-gray-200 pb-4">
+              <h3 class="font-semibold text-gray-900 mb-2">How are voucher codes generated?</h3>
+              <p class="text-gray-700 text-sm">Voucher codes can be manually entered or auto-generated with the format <span class="font-mono bg-gray-100 px-2 py-1 rounded">VP-XXXXXXXXXX</span> (10 random digits). Click the 🎲 dice button!</p>
+            </div>
+            <div class="border-b border-gray-200 pb-4">
+              <h3 class="font-semibold text-gray-900 mb-2">Can I issue multiple vouchers as an individual?</h3>
+              <p class="text-gray-700 text-sm">Yes! You can issue as many vouchers as you want, one at a time. Each gets a unique code automatically.</p>
+            </div>
+            <div class="border-b border-gray-200 pb-4">
+              <h3 class="font-semibold text-gray-900 mb-2">What's the difference between company and individual accounts?</h3>
+              <p class="text-gray-700 text-sm">Companies get bulk issuance, analytics, merchant restrictions, and API access. Individuals get instant issuance with auto-generated codes — perfect for gifts.</p>
+            </div>
+            <div class="border-b border-gray-200 pb-4">
+              <h3 class="font-semibold text-gray-900 mb-2">Can merchants see who issued the voucher?</h3>
+              <p class="text-gray-700 text-sm">Yes, the redemption screen shows whether a voucher was issued by a company or an individual, along with the issuer name.</p>
+            </div>
+            <div>
+              <h3 class="font-semibold text-gray-900 mb-2">How do I get support?</h3>
+              <p class="text-gray-700 text-sm">Email us at <span class="font-mono bg-gray-100 px-2 py-1 rounded">support@voucherpalace.com</span> or use the contact form in your dashboard.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-gray-900 rounded-xl text-white p-8 no-print">
+          <div class="grid md:grid-cols-3 gap-8">
+            <div>
+              <div class="flex items-center space-x-2 mb-4">
+                <i class="fas fa-ticket-alt text-blue-400 text-2xl"></i>
+                <span class="text-xl font-bold">VoucherPalace</span>
+              </div>
+              <p class="text-gray-400 text-sm">
+                The universal voucher platform — for companies <span class="text-blue-400">and</span> individuals.
+              </p>
+              <div class="mt-4 flex space-x-2">
+                <span class="issuer-tag issuer-company text-xs">Company Issuer</span>
+                <span class="issuer-tag issuer-individual text-xs">Individual Issuer</span>
+              </div>
+            </div>
+            <div>
+              <h4 class="font-semibold text-white mb-4">Quick Links</h4>
+              <ul class="space-y-2 text-sm text-gray-400">
+                <li><a href="#for-companies" class="hover:text-white transition">For Companies</a></li>
+                <li><a href="#for-individuals" class="hover:text-white transition">For Individuals</a></li>
+                <li><a href="#for-merchants" class="hover:text-white transition">For Merchants</a></li>
+                <li><a href="#for-users" class="hover:text-white transition">For Users</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="font-semibold text-white mb-4">Contact</h4>
+              <ul class="space-y-2 text-sm text-gray-400">
+                <li><i class="fas fa-envelope mr-2"></i> support@voucherpalace.com</li>
+                <li><i class="fas fa-phone mr-2"></i> +254 700 000 000</li>
+                <li><i class="fas fa-map-marker-alt mr-2"></i> Nairobi, Kenya</li>
+              </ul>
+            </div>
+          </div>
+          <div class="mt-8 pt-8 border-t border-gray-800 text-center text-gray-500 text-sm">
+            <p>&copy; 2026 VoucherPalace. All rights reserved. Version 2.1 — Now supporting individual issuers.</p>
+          </div>
+        </footer>
+      </main>
+    </div>
+  </div>
+
+  <!-- Back to Top Button -->
+  <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-8 right-8 bg-blue-600 text-white w-12 h-12 rounded-full shadow-lg hover:bg-blue-700 transition flex items-center justify-center no-print">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
+  <script>
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // Highlight current section in TOC
+    window.addEventListener('scroll', function() {
+      const sections = document.querySelectorAll('section[id]');
+      const navLinks = document.querySelectorAll('.table-of-contents a');
+      
+      let currentSection = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop - 100;
+        const sectionHeight = section.clientHeight;
+        if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
+          currentSection = section.getAttribute('id');
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.classList.remove('text-blue-600', 'bg-gray-50');
+        if (link.getAttribute('href') === `#${currentSection}`) {
+          link.classList.add('text-blue-600', 'bg-gray-50');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
