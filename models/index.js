@@ -46,7 +46,6 @@ db.Voucher.hasMany(db.VoucherRedemption, {
 });
 
 // Export
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
+  db.Sequelize = Sequelize;
 
 module.exports = db;

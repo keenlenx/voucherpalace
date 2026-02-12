@@ -1,4 +1,5 @@
 const { VoucherRedemption, Company, Voucher, User, Merchant } = require('../models');
+const sequelize = require('../sequelize');
 
 class VoucherController {
   // --------------------
@@ -126,7 +127,12 @@ class VoucherController {
 
   static async getByCompany(req, res) {
     try {
-      const vouchers = await Voucher.findAll({ where: { company_id: req.params.companyId } });
+      const vouchers = await Voucher.findAll({ 
+        where: { company_id: req.params.companyId },
+        include: [
+          { model: User, as: 'assigned_user' }
+        ]
+      });
       res.json(vouchers);
     } catch (err) {
       res.status(500).json({ error: err.message });
@@ -135,7 +141,13 @@ class VoucherController {
 
   static async getByUser(req, res) {
     try {
-      const vouchers = await Voucher.findAll({ where: { assigned_user_id: req.params.userId } });
+      const vouchers = await Voucher.findAll({ 
+        where: { assigned_user_id: req.params.userId },
+        include: [
+          { model: Company },
+          { model: Merchant }
+        ]
+      });
       res.json(vouchers);
     } catch (err) {
       res.status(500).json({ error: err.message });
@@ -144,8 +156,33 @@ class VoucherController {
 
   static async getByMerchant(req, res) {
     try {
-      const vouchers = await Voucher.findAll({ where: { merchant_id: req.params.merchantId } });
+      const vouchers = await Voucher.findAll({ 
+        where: { merchant_id: req.params.merchantId },
+        include: [
+          { model: Company },
+          { model: User, as: 'assigned_user' }
+        ]
+      });
       res.json(vouchers);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  }
+
+  static async getByCode(req, res) {
+    try {
+      const voucher = await Voucher.findOne({ 
+        where: { code: req.params.code },
+        include: [
+          { model: Company },
+          { model: Merchant },
+          { model: User, as: 'assigned_user' },
+          { model: VoucherRedemption, as: 'redemptions' }
+        ]
+      });
+      
+      if (!voucher) return res.status(404).json({ error: 'Voucher not found' });
+      res.json(voucher);
     } catch (err) {
       res.status(500).json({ error: err.message });
     }

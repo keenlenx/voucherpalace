@@ -14,7 +14,16 @@ const setupSwagger = (app) => {
         {
           url: `http://voucher.agiza.co.ke:${process.env.PORT}`,
           description: 'Local server'
+        },
+         {
+          url: `https://provoucher.agiza.co.ke:${process.env.PORT}`,
+          description: 'Local server'
+        },
+        {
+          url: `http://localhost:${process.env.PORT}`,
+          description: 'Local server'
         }
+
       ],
       components: {
         schemas: {

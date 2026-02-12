@@ -31,7 +31,26 @@ router.get('/', VoucherController.getAll);
  *         description: Voucher not found
  */
 router.get('/:id', VoucherController.getOne);
+
 /**
+ * @swagger
+ * /vouchers/code/{code}:
+ *   get:
+ *     summary: Get voucher by code
+ *     tags: [Vouchers]
+ *     parameters:
+ *       - in: path
+ *         name: code
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Voucher found
+ *       404:
+ *         description: Voucher not found
+ */
+router.get('/code/:code', VoucherController.getByCode);/**
  * @swagger
  * /vouchers/redeem:
  *   post:
